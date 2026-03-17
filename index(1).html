@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Smart Fan — Energy Saving Device</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #050a12;
+    --surface: #0a1525;
+    --surface2: #0e1e35;
+    --accent: #00d4ff;
+    --accent2: #00ff9d;
+    --accent3: #f7c948;
+    --text: #e8f4ff;
+    --muted: #6a8caa;
+    --border: rgba(0,212,255,0.15);
+    --glow: 0 0 40px rgba(0,212,255,0.25);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── CANVAS BACKGROUND ── */
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background: rgba(5,10,18,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: padding 0.3s;
+  }
+  nav.scrolled { padding: 14px 60px; }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── SECTIONS WRAPPER ── */
+  section { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    animation: spinRing linear infinite;
+  }
+  .hero-ring:nth-child(1) { width: 500px; height: 500px; animation-duration: 20s; }
+  .hero-ring:nth-child(2) { width: 700px; height: 700px; animation-duration: 35s; animation-direction: reverse; opacity: 0.5; }
+  .hero-ring:nth-child(3) { width: 900px; height: 900px; animation-duration: 50s; opacity: 0.3; }
+
+  .hero-ring::after {
+    content: '';
+    position: absolute;
+    top: -3px; left: 50%;
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--accent);
+    transform: translateX(-50%);
+  }
+
+  @keyframes spinRing { to { transform: rotate(360deg); } }
+
+  /* Animated Fan SVG */
+  .hero-fan {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    opacity: 0.07;
+  }
+  .fan-blade { transform-origin: 50% 50%; animation: fanSpin 3s linear infinite; }
+  @keyframes fanSpin { to { transform: rotate(360deg); } }
+
+  .hero-content { position: relative; z-index: 2; max-width: 860px; }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent2);
+    border-radius: 50%;
+    animation: pulse 1.5s ease infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(44px, 7vw, 90px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -2px;
+    margin-bottom: 12px;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+  .hero h1 .highlight {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-image: linear-gradient(135deg, var(--accent), var(--accent2));
+  }
+  .hero-sub {
+    font-size: clamp(16px,2.5vw,22px);
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 52px;
+    line-height: 1.6;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #050a12;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 16px 36px;
+    border-radius: 4px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+    box-shadow: 0 0 30px rgba(0,212,255,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  .btn-primary:hover::after { left: 100%; }
+  .btn-primary:hover { box-shadow: 0 0 50px rgba(0,212,255,0.5); transform: translateY(-2px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 16px 36px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.05); }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    padding: 60px 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-item {
+    background: var(--bg);
+    padding: 40px 40px;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  .stat-item:hover { background: var(--surface); }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* ── SECTION COMMON ── */
+  .section {
+    padding: 120px 60px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 4vw, 54px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .section-desc {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 640px;
+  }
+
+  /* ── FEATURES ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 64px;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .feature-card.visible { opacity: 1; transform: translateY(0); }
+  .feature-card:hover {
+    border-color: rgba(0,212,255,0.4);
+    box-shadow: var(--glow);
+    transform: translateY(-4px);
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-icon {
+    width: 48px; height: 48px;
+    border-radius: 10px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 24px;
+    transition: all 0.3s;
+  }
+  .feature-card:hover .feature-icon {
+    background: rgba(0,212,255,0.15);
+    box-shadow: 0 0 20px rgba(0,212,255,0.2);
+  }
+  .feature-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .feature-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    padding: 120px 60px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .how-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  @media(max-width:900px){ .how-inner{grid-template-columns:1fr;gap:60px;} }
+  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 48px; }
+  .step {
+    display: flex;
+    gap: 24px;
+    position: relative;
+    padding-bottom: 40px;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.5s;
+  }
+  .step.visible { opacity: 1; transform: translateX(0); }
+  .step:last-child { padding-bottom: 0; }
+  .step-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .step-num {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--accent);
+    flex-shrink: 0;
+    box-shadow: 0 0 20px rgba(0,212,255,0.2);
+  }
+  .step-connector {
+    width: 1px;
+    flex: 1;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    min-height: 30px;
+  }
+  .step:last-child .step-connector { display: none; }
+  .step-body { padding-top: 8px; }
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .step-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  /* Visual side */
+  .visual-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .visual-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(0,212,255,0.06) 0%, transparent 70%);
+  }
+
+  /* Animated fan visual */
+  .fan-visual {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fan-svg { animation: fanSpinSlow 4s linear infinite; transform-origin: center; }
+  .fan-svg.fast { animation-duration: 0.8s; }
+  .fan-svg.stopped { animation-play-state: paused; }
+  .fan-orbit {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px dashed rgba(0,212,255,0.25);
+    animation: spinRing linear infinite;
+  }
+  .fan-orbit:nth-child(1) { width: 260px; height: 260px; animation-duration: 25s; }
+  .fan-orbit:nth-child(2) { width: 320px; height: 320px; animation-duration: 40s; animation-direction: reverse; }
+  .fan-orbit::after {
+    content: '';
+    position: absolute;
+    top: -3px; left: 50%;
+    width: 6px; height: 6px;
+    background: var(--accent2);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent2);
+    transform: translateX(-50%);
+  }
+  @keyframes fanSpinSlow { to { transform: rotate(360deg); } }
+
+  .fan-status {
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 13px;
+    color: var(--accent2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .status-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--accent2);
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 1.5s infinite;
+    vertical-align: middle;
+  }
+
+  /* ── REAL-WORLD RESULTS ── */
+  .results-section { padding: 120px 60px; }
+  .results-inner { max-width: 1300px; margin: 0 auto; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 64px;
+  }
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s;
+  }
+  .result-card.visible { opacity: 1; transform: translateY(0); }
+  .result-card:hover { border-color: rgba(0,255,157,0.3); }
+  .result-station {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .result-location {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .result-location::before {
+    content: '📍';
+    font-size: 12px;
+  }
+  .result-bar-wrap {
+    background: rgba(255,255,255,0.05);
+    border-radius: 100px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .result-bar {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    width: 0;
+    transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .result-card.visible .result-bar { width: var(--pct); }
+  .result-pct {
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .result-pct-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* ── SPECS TABLE ── */
+  .specs-section {
+    padding: 120px 60px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .specs-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  @media(max-width:900px){.specs-inner{grid-template-columns:1fr;}}
+  .specs-table { width: 100%; border-collapse: collapse; margin-top: 48px; }
+  .specs-table tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .specs-table tr:last-child { border-bottom: none; }
+  .specs-table tr:hover { background: rgba(0,212,255,0.04); }
+  .specs-table td {
+    padding: 18px 0;
+    font-size: 15px;
+    vertical-align: top;
+  }
+  .specs-table td:first-child {
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    width: 45%;
+    font-weight: 500;
+  }
+  .specs-table td:last-child { font-weight: 500; color: var(--text); }
+
+  /* ROI visual */
+  .roi-visual {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    margin-top: 48px;
+  }
+  .roi-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .roi-timeline {
+    position: relative;
+    padding-top: 30px;
+  }
+  .roi-track {
+    height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 100px;
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .roi-fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    width: 0;
+    transition: width 2s cubic-bezier(0.16,1,0.3,1) 0.3s;
+  }
+  .roi-fill.visible { width: 60%; }
+  .roi-marker {
+    position: absolute;
+    top: -24px;
+    background: var(--accent3);
+    color: #050a12;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+    left: 60%;
+    transform: translateX(-50%);
+  }
+  .roi-marker::after {
+    content: '';
+    position: absolute;
+    top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: var(--accent3);
+  }
+  .roi-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  .roi-note {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 24px;
+    line-height: 1.7;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .roi-note strong { color: var(--accent2); }
+
+  /* ── APPLICATIONS ── */
+  .apps-section { padding: 120px 60px; }
+  .apps-inner { max-width: 1300px; margin: 0 auto; }
+  .apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 64px;
+  }
+  .app-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 30px 24px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: default;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.4s, transform 0.4s, border-color 0.3s, box-shadow 0.3s;
+  }
+  .app-card.visible { opacity: 1; transform: scale(1); }
+  .app-card:hover {
+    border-color: rgba(0,212,255,0.35);
+    box-shadow: 0 8px 32px rgba(0,212,255,0.1);
+    transform: translateY(-4px) scale(1.02);
+  }
+  .app-icon { font-size: 36px; margin-bottom: 14px; }
+  .app-label { font-size: 14px; font-weight: 500; color: var(--text); }
+
+  /* ── ABOUT ── */
+  .about-section {
+    padding: 120px 60px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .about-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  @media(max-width:900px){.about-inner{grid-template-columns:1fr;gap:60px;}}
+  .about-avatar {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    color: #050a12;
+    margin-bottom: 32px;
+    box-shadow: 0 0 40px rgba(0,212,255,0.25);
+  }
+  .about-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .about-role { font-size: 15px; color: var(--accent); margin-bottom: 4px; font-weight: 500; }
+  .about-org { font-size: 14px; color: var(--muted); margin-bottom: 32px; }
+  .about-text { font-size: 16px; color: var(--muted); line-height: 1.8; margin-bottom: 28px; }
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid rgba(0,212,255,0.3);
+    padding: 12px 24px;
+    border-radius: 6px;
+    transition: all 0.3s;
+    font-weight: 500;
+  }
+  .contact-link:hover { background: rgba(0,212,255,0.08); box-shadow: 0 0 20px rgba(0,212,255,0.15); }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .about-stat {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    text-align: center;
+    transition: border-color 0.3s;
+  }
+  .about-stat:hover { border-color: rgba(0,212,255,0.3); }
+  .about-stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .about-stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-brand {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--accent);
+  }
+  .footer-brand span { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: 16px; }
+  .footer-copy { font-size: 13px; color: var(--muted); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media(max-width:768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .section, .how-section, .results-section, .specs-section, .apps-section, .about-section { padding: 80px 24px; }
+    .stats-strip { padding: 40px 24px; }
+    footer { padding: 32px 24px; }
+    .hero { padding: 100px 24px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Animated background canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- Navigation -->
+<nav id="navbar">
+  <div class="nav-logo">AI<span>SmartFan</span></div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How It Works</a>
+    <a href="#results">Results</a>
+    <a href="#specs">Specs</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-ring"></div>
+  <div class="hero-ring"></div>
+  <div class="hero-ring"></div>
+  <div class="hero-content">
+    <div class="hero-badge">AI-Powered Energy Automation</div>
+    <h1>Smart Fan <span class="highlight">Energy<br/>Saving</span> Device</h1>
+    <p class="hero-sub">Automatic occupancy-based ceiling fan controller<br/>cutting electricity waste by up to 79%</p>
+    <div class="hero-ctas">
+      <a href="#features" class="btn-primary">Explore Features</a>
+      <a href="#results" class="btn-secondary">See Real Results →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Strip -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num" data-count="79">0</div>
+    <div class="stat-label">% Max Energy Savings</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" data-count="3">0</div>
+    <div class="stat-label">Railway Stations Deployed</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" data-count="90">0</div>
+    <div class="stat-label">Watt Fan Compatibility</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" data-suffix=" Yr">1.5</div>
+    <div class="stat-label">Average ROI Period</div>
+  </div>
+</div>
+
+<!-- Features -->
+<section id="features">
+  <div class="section">
+    <div class="section-label">Core Capabilities</div>
+    <h2 class="section-title">Built for intelligence,<br/>designed for impact</h2>
+    <p class="section-desc">Every feature engineered to maximise energy savings with zero compromise on comfort or reliability.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <div class="feature-title">AI Occupancy Detection</div>
+        <p class="feature-text">Advanced AI algorithms continuously monitor presence in real time, ensuring fans activate only when people are in the space.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Automatic Speed Control</div>
+        <p class="feature-text">Dynamically adjusts fan speed or shuts off entirely based on occupancy — seamless, hands-free operation.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔋</div>
+        <div class="feature-title">60–79% Energy Savings</div>
+        <p class="feature-text">Field-proven energy reductions at major Indian railway stations, delivering measurable, documented results.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔧</div>
+        <div class="feature-title">Easy Retrofit Install</div>
+        <p class="feature-text">No rewiring, no new fixtures. Works with existing ceiling fans (35W – 90W) — retrofits in minutes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <div class="feature-title">Durable Aluminium Housing</div>
+        <p class="feature-text">Industrial-grade aluminium enclosure ensures long-term durability in demanding public infrastructure environments.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">♾️</div>
+        <div class="feature-title">Fully Automatic Operation</div>
+        <p class="feature-text">Set-and-forget automation. No user intervention required — the system learns and responds to occupancy patterns.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<div class="how-section" id="how">
+  <div class="how-inner">
+    <div>
+      <div class="section-label">Process</div>
+      <h2 class="section-title">How the system works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num">01</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Continuous Area Monitoring</div>
+            <p class="step-text">The AI module constantly scans the area using occupancy detection sensors, building an accurate real-time presence map.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num">02</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Presence Confirmed — Fan On</div>
+            <p class="step-text">When people are detected, the fan runs at normal speed. Comfort is never compromised when the space is occupied.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num">03</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-title">No Occupancy — Fan Off</div>
+            <p class="step-text">When the area is detected as empty, the device automatically reduces speed or switches the fan off, eliminating waste.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-line">
+            <div class="step-num">04</div>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Instant Resume</div>
+            <p class="step-text">The moment someone re-enters, the fan resumes normal operation automatically — no switches, no delays.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="visual-box">
+      <div class="fan-visual">
+        <div class="fan-orbit"></div>
+        <div class="fan-orbit"></div>
+        <!-- Fan SVG -->
+        <svg class="fan-svg" id="fan-anim" width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="70" cy="70" r="12" fill="rgba(0,212,255,0.8)" />
+          <circle cx="70" cy="70" r="6" fill="#050a12" />
+          <!-- Blade 1 -->
+          <path d="M70 58 C60 40, 40 35, 38 25 C50 20, 70 45, 70 58Z" fill="rgba(0,212,255,0.7)" />
+          <!-- Blade 2 -->
+          <path d="M82 70 C100 60, 105 40, 115 38 C120 50, 95 70, 82 70Z" fill="rgba(0,255,157,0.7)" />
+          <!-- Blade 3 -->
+          <path d="M70 82 C80 100, 105 105, 102 115 C90 120, 70 95, 70 82Z" fill="rgba(0,212,255,0.7)" />
+          <!-- Blade 4 -->
+          <path d="M58 70 C40 80, 35 105, 25 102 C20 90, 45 70, 58 70Z" fill="rgba(0,255,157,0.7)" />
+        </svg>
+        <div class="fan-status">
+          <span class="status-dot"></span>System Active
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Real-World Results -->
+<div class="results-section" id="results">
+  <div class="results-inner">
+    <div class="section-label">Field Deployment</div>
+    <h2 class="section-title">Real results,<br/>real stations</h2>
+    <p class="section-desc">Proven performance at some of Mumbai's busiest railway stations — some of India's highest footfall public spaces.</p>
+    <div class="results-grid">
+      <div class="result-card" data-delay="0">
+        <div class="result-station">Mumbai Central</div>
+        <div class="result-location">Mumbai, Maharashtra</div>
+        <div class="result-bar-wrap">
+          <div class="result-bar" style="--pct: 79.6%"></div>
+        </div>
+        <div class="result-pct">79.6%</div>
+        <div class="result-pct-label">Energy Saved</div>
+      </div>
+      <div class="result-card" data-delay="150">
+        <div class="result-station">Bandra Station</div>
+        <div class="result-location">Bandra, Mumbai</div>
+        <div class="result-bar-wrap">
+          <div class="result-bar" style="--pct: 61.5%"></div>
+        </div>
+        <div class="result-pct">61.5%</div>
+        <div class="result-pct-label">Energy Saved</div>
+      </div>
+      <div class="result-card" data-delay="300">
+        <div class="result-station">Andheri Station</div>
+        <div class="result-location">Andheri, Mumbai</div>
+        <div class="result-bar-wrap">
+          <div class="result-bar" style="--pct: 61.4%"></div>
+        </div>
+        <div class="result-pct">61.4%</div>
+        <div class="result-pct-label">Energy Saved</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Specs + ROI -->
+<div class="specs-section" id="specs">
+  <div class="specs-inner">
+    <div>
+      <div class="section-label">Technical Specifications</div>
+      <h2 class="section-title">Built to spec</h2>
+      <table class="specs-table">
+        <tr>
+          <td>Product Type</td>
+          <td>AI Smart Fan Energy Saving Controller</td>
+        </tr>
+        <tr>
+          <td>Detection Technology</td>
+          <td>AI Occupancy Detection</td>
+        </tr>
+        <tr>
+          <td>Fan Compatibility</td>
+          <td>35W – 90W Ceiling Fans</td>
+        </tr>
+        <tr>
+          <td>Installation Type</td>
+          <td>Retrofit (no rewiring required)</td>
+        </tr>
+        <tr>
+          <td>Enclosure Material</td>
+          <td>Industrial Aluminium Housing</td>
+        </tr>
+        <tr>
+          <td>Control Function</td>
+          <td>Automatic Speed Control & Shut-Off</td>
+        </tr>
+        <tr>
+          <td>Operation Mode</td>
+          <td>Fully Automatic</td>
+        </tr>
+        <tr>
+          <td>Energy Saving Range</td>
+          <td>60% – 79% (field demonstrated)</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <div class="section-label">Return on Investment</div>
+      <h2 class="section-title">Pays for itself</h2>
+      <div class="roi-visual" id="roi-box">
+        <div class="roi-title">Investment Recovery Timeline</div>
+        <div class="roi-timeline">
+          <div class="roi-marker">ROI Point</div>
+          <div class="roi-track">
+            <div class="roi-fill" id="roi-fill"></div>
+          </div>
+          <div class="roi-labels">
+            <span>Month 0</span>
+            <span>6 Months</span>
+            <span>1 Year</span>
+            <span>1.5 Years</span>
+            <span>2 Years</span>
+          </div>
+        </div>
+        <p class="roi-note">
+          Due to significant electricity savings of <strong>60–79%</strong>, organisations typically recover their full investment within <strong>1 to 1.5 years</strong>, depending on usage patterns and electricity rates.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Applications -->
+<div class="apps-section" id="applications">
+  <div class="apps-inner">
+    <div class="section-label">Applications</div>
+    <h2 class="section-title">Designed for<br/>high-traffic spaces</h2>
+    <div class="apps-grid">
+      <div class="app-card">
+        <div class="app-icon">🚂</div>
+        <div class="app-label">Railway Stations</div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">🏛️</div>
+        <div class="app-label">Government Offices</div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">🎓</div>
+        <div class="app-label">Schools & Colleges</div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">🏥</div>
+        <div class="app-label">Hospitals</div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">🏢</div>
+        <div class="app-label">Corporate Buildings</div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">🪑</div>
+        <div class="app-label">Public Waiting Areas</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- About / Contact -->
+<div class="about-section" id="contact">
+  <div class="about-inner">
+    <div>
+      <div class="about-avatar">DC</div>
+      <div class="about-name">Devendra Umesh Chavan</div>
+      <div class="about-role">AI Engineer & Innovator</div>
+      <div class="about-org">Founder — Saavo Avinya Pvt. Ltd. · Mumbai, India</div>
+      <p class="about-text">
+        Passionate about applying artificial intelligence to solve real-world energy challenges in India's public infrastructure. This device represents a practical, deployable solution to one of the most overlooked sources of electricity waste.
+      </p>
+      <a href="mailto:devendrachavan31@gmail.com" class="contact-link">
+        ✉ devendrachavan31@gmail.com
+      </a>
+    </div>
+    <div class="about-stats">
+      <div class="about-stat">
+        <div class="about-stat-num">3+</div>
+        <div class="about-stat-label">Stations Deployed</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-num">79%</div>
+        <div class="about-stat-label">Peak Energy Saving</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-num">~1 Yr</div>
+        <div class="about-stat-label">ROI Period</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-num">AI</div>
+        <div class="about-stat-label">Core Technology</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">AISmartFan <span>© 2025 Saavo Avinya Pvt. Ltd.</span></div>
+  <div class="footer-copy">Made in Mumbai, India 🇮🇳</div>
+</footer>
+
+<script>
+// ── PARTICLE CANVAS ──
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function createParticle() {
+  return {
+    x: Math.random() * W,
+    y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    r: Math.random() * 1.5 + 0.3,
+    alpha: Math.random() * 0.5 + 0.1
+  };
+}
+
+for (let i = 0; i < 80; i++) particles.push(createParticle());
+
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0) p.x = W;
+    if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H;
+    if (p.y > H) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0,212,255,${p.alpha})`;
+    ctx.fill();
+  });
+  // Draw connections
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(0,212,255,${0.12 * (1 - dist / 120)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── NAVBAR SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── COUNT UP ANIMATION ──
+function animateCount(el, target, suffix) {
+  const isDecimal = target % 1 !== 0;
+  let start = 0;
+  const duration = 1800;
+  const startTime = performance.now();
+  function update(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const val = isDecimal ? (eased * target).toFixed(1) : Math.round(eased * target);
+    el.textContent = val + (suffix || '');
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+// ── INTERSECTION OBSERVER ──
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      const delay = parseInt(el.dataset.delay || 0);
+      setTimeout(() => el.classList.add('visible'), delay);
+      revealObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.feature-card, .step, .result-card, .app-card').forEach(el => revealObs.observe(el));
+
+// Count-up observer
+const countObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      const target = parseFloat(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      animateCount(el, target, suffix);
+      countObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+
+// ROI fill observer
+const roiObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.getElementById('roi-fill').classList.add('visible');
+      roiObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+const roiBox = document.getElementById('roi-box');
+if (roiBox) roiObs.observe(roiBox);
+
+// ── STAGGERED FEATURE CARDS ──
+document.querySelectorAll('.feature-card').forEach((card, i) => {
+  card.style.transitionDelay = (i * 80) + 'ms';
+});
+
+// ── FAN SPEED CONTROL ON SCROLL ──
+const fanEl = document.getElementById('fan-anim');
+let fanFast = false;
+setInterval(() => {
+  fanFast = !fanFast;
+  if (fanFast) {
+    fanEl.style.animationDuration = '0.5s';
+  } else {
+    fanEl.style.animationDuration = '4s';
+  }
+}, 3000);
+</script>
+</body>
+</html>
