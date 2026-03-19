@@ -37,6 +37,38 @@
     backdrop-filter: blur(18px); border-bottom: 1px solid var(--border); transition: padding 0.3s;
   }
   nav.scrolled { padding: 13px 60px; }
+
+  /* ── Scroll progress bar — sits on the bottom edge of the nav ── */
+  #scroll-progress {
+    position: absolute; bottom: -1px; left: 0;
+    height: 2px; width: 0%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent3));
+    border-radius: 0 2px 2px 0;
+    transition: width 0.08s linear;
+    box-shadow: 0 0 8px rgba(0,212,255,0.6);
+    pointer-events: none; z-index: 1001;
+  }
+  /* Animated glow dot at the leading edge */
+  #scroll-progress::after {
+    content: '';
+    position: absolute; right: -3px; top: 50%;
+    transform: translateY(-50%);
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent), 0 0 20px rgba(0,212,255,0.5);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  /* Show dot only when scrolling has started */
+  #scroll-progress.active::after { opacity: 1; }
+  /* Color shifts as user scrolls deeper */
+  #scroll-progress.deep {
+    background: linear-gradient(90deg, var(--accent), var(--accent3), #ff6b35);
+    box-shadow: 0 0 8px rgba(247,201,72,0.6);
+  }
+  #scroll-progress.deep::after {
+    background: var(--accent3);
+    box-shadow: 0 0 10px var(--accent3), 0 0 20px rgba(247,201,72,0.5);
+  }
   .nav-logo { font-family: 'Orbitron', monospace; font-size: 14px; font-weight: 900; color: var(--accent); letter-spacing: 2px; }
   .nav-logo span { color: var(--text); font-weight: 400; }
   .nav-links { display: flex; gap: 32px; }
@@ -1190,6 +1222,102 @@
     }
   }
 
+
+  /* ══════════════════════════════════════════════════
+     PATENTED PRODUCT — Badge System
+  ══════════════════════════════════════════════════ */
+
+  /* ── 1. Hero floating patent badge (top-right corner) ── */
+  .patent-hero-badge {
+    position: absolute; top: 88px; right: 32px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0; z-index: 3;
+    animation: fadeUp 1s 0.6s ease both;
+  }
+  @media(max-width:768px){ .patent-hero-badge { top: 76px; right: 14px; } }
+
+  .patent-hex {
+    width: 72px; height: 82px; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    cursor: default;
+  }
+  .patent-hex svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .patent-hex-inner {
+    position: relative; z-index: 1; text-align: center;
+  }
+  .patent-hex-icon { font-size: 18px; display: block; margin-bottom: 1px; }
+  .patent-hex-text {
+    font-family: 'Orbitron', monospace; font-size: 5.5px; font-weight: 900;
+    letter-spacing: 1.5px; text-transform: uppercase; color: #fff;
+    line-height: 1.3; white-space: nowrap;
+  }
+  @keyframes hexPulse {
+    0%,100%{ filter: drop-shadow(0 0 6px rgba(247,201,72,0.5)); }
+    50%    { filter: drop-shadow(0 0 18px rgba(247,201,72,0.9)); }
+  }
+  .patent-hex { animation: hexPulse 2.5s ease-in-out infinite; }
+
+  /* ── 2. Inline patent pill (used in pricing card) ── */
+  .patent-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, rgba(247,201,72,0.12), rgba(255,107,53,0.08));
+    border: 1px solid rgba(247,201,72,0.45);
+    border-radius: 4px; padding: 8px 16px;
+    font-family: 'Orbitron', monospace; font-size: 8px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--accent3);
+    margin-bottom: 20px; position: relative;
+    box-shadow: 0 0 18px rgba(247,201,72,0.1);
+  }
+  .patent-pill-icon {
+    width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(247,201,72,0.15); border: 1px solid rgba(247,201,72,0.4);
+    display: flex; align-items: center; justify-content: center; font-size: 11px;
+    animation: stampPulse 2.8s ease-in-out infinite;
+  }
+  .patent-pill-divider {
+    width: 1px; height: 16px; background: rgba(247,201,72,0.3); flex-shrink: 0;
+  }
+  .patent-pill-sub {
+    font-size: 7px; color: var(--muted); letter-spacing: 1px;
+    display: block; margin-top: 2px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; text-transform: none;
+  }
+
+  /* ── 3. About section patent seal ── */
+  .patent-seal {
+    display: inline-flex; align-items: center; gap: 14px;
+    background: linear-gradient(135deg, rgba(247,201,72,0.06), rgba(10,21,37,0.8));
+    border: 1px solid rgba(247,201,72,0.3);
+    border-radius: 10px; padding: 16px 20px; margin-top: 20px;
+    position: relative; overflow: hidden;
+  }
+  .patent-seal::before {
+    content: '';
+    position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+    background: linear-gradient(to bottom, var(--accent3), rgba(247,201,72,0.3));
+    box-shadow: 0 0 8px var(--accent3);
+  }
+  .patent-seal-ring {
+    width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(247,201,72,0.1); border: 2px solid rgba(247,201,72,0.5);
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+    box-shadow: 0 0 16px rgba(247,201,72,0.2);
+    animation: stampPulse 3s ease-in-out infinite;
+  }
+  .patent-seal-body {}
+  .patent-seal-label {
+    font-family: 'Orbitron', monospace; font-size: 7px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--accent3);
+    margin-bottom: 4px;
+  }
+  .patent-seal-title {
+    font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--text);
+    margin-bottom: 2px;
+  }
+  .patent-seal-sub {
+    font-size: 11px; color: var(--muted); line-height: 1.5;
+  }
 </style>
 </head>
 <body>
@@ -1198,6 +1326,7 @@
 
 <!-- NAV -->
 <nav id="nav">
+  <div id="scroll-progress"></div>
   <div class="nav-logo">AI<span>SMARTFAN</span></div>
   <div class="nav-links">
     <a href="#features">Features</a>
@@ -1233,6 +1362,26 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-ring"></div><div class="hero-ring"></div><div class="hero-ring"></div>
+
+  <!-- Floating Patent Badge — top right -->
+  <div class="patent-hero-badge">
+    <div class="patent-hex">
+      <!-- Hexagon SVG -->
+      <svg viewBox="0 0 80 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 2 L76 22 L76 70 L40 90 L4 70 L4 22 Z"
+          fill="rgba(247,201,72,0.10)"
+          stroke="rgba(247,201,72,0.7)" stroke-width="1.5"/>
+        <path d="M40 10 L70 27 L70 65 L40 82 L10 65 L10 27 Z"
+          fill="none"
+          stroke="rgba(247,201,72,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+      </svg>
+      <div class="patent-hex-inner">
+        <span class="patent-hex-icon">⚙️</span>
+        <div class="patent-hex-text">PATENTED<br/>PRODUCT</div>
+      </div>
+    </div>
+  </div>
+
   <div class="hero-content">
     <div class="hero-badge">AI-Powered Energy Automation</div>
     <h1>Smart Fan <span class="hl">Energy<br/>Saving</span> Device</h1>
@@ -1524,6 +1673,15 @@
         <div class="price-name">AI Smart Fan Device</div>
         <div class="price-amount"><span class="currency">₹</span>3,000</div>
         <div class="price-sub">Per unit · One-time cost</div>
+        <!-- Patent pill -->
+        <div class="patent-pill">
+          <div class="patent-pill-icon">⚙️</div>
+          <div class="patent-pill-divider"></div>
+          <div>
+            PATENTED PRODUCT
+            <span class="patent-pill-sub">Intellectual Property Protected · India</span>
+          </div>
+        </div>
         <span class="price-badge green">✔ 1 Year Warranty Included</span>
         <ul class="price-features">
           <li>AI-based occupancy detection</li>
@@ -1926,6 +2084,16 @@
           <span class="founder-cursor"></span>
         </div>
       </div>
+      <!-- Patent Seal -->
+      <div class="patent-seal">
+        <div class="patent-seal-ring">⚙️</div>
+        <div class="patent-seal-body">
+          <div class="patent-seal-label">🏛 Intellectual Property</div>
+          <div class="patent-seal-title">Patented Product</div>
+          <div class="patent-seal-sub">AI Smart Fan Energy Saving Device<br/>Patent Protected · India</div>
+        </div>
+      </div>
+
       <p class="abt-text">Passionate about applying artificial intelligence to solve real-world energy challenges in India's public infrastructure. This device is a practical, deployable AI solution to one of the most overlooked sources of electricity waste.</p>
       <a href="/cdn-cgi/l/email-protection#f3979685969d978192909b9285929dc0c2b3949e929a9fdd909c9e" class="clink">✉ &nbsp;<span class="__cf_email__" data-cfemail="0b6f6e7d6e656f796a68636a7d6a65383a4b6c666a626725686466">[email&#160;protected]</span></a>
     </div>
@@ -1984,9 +2152,24 @@ for(var i=0; i<80; i++) P.push(mp());
   requestAnimationFrame(draw);
 })();
 
-// ── NAV SCROLL ──
+// ── NAV SCROLL + SCROLL PROGRESS BAR ──
+var scrollBar = document.getElementById('scroll-progress');
 window.addEventListener('scroll', function(){
-  document.getElementById('nav').classList.toggle('scrolled', scrollY > 60);
+  var nav = document.getElementById('nav');
+  nav.classList.toggle('scrolled', scrollY > 60);
+
+  // Calculate scroll percentage
+  var docH = document.documentElement.scrollHeight - window.innerHeight;
+  var pct  = docH > 0 ? (scrollY / docH) * 100 : 0;
+
+  // Update bar width
+  scrollBar.style.width = pct + '%';
+
+  // Add active class once scrolled > 1%
+  scrollBar.classList.toggle('active', pct > 0.5);
+
+  // Deep color shift after 60% scroll
+  scrollBar.classList.toggle('deep', pct > 60);
 });
 
 // ── COUNT-UP ──
