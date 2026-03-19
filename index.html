@@ -124,20 +124,91 @@
   .wrap { max-width: 1320px; margin: 0 auto; }
   .sec { padding: 120px 60px; position: relative; z-index: 1; }
   .sec-label { font-family: 'Orbitron', monospace; font-size: 9px; font-weight: 600; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 18px; }
-  .sec-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(26px,3.5vw,48px); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; line-height: 1.1; margin-bottom: 20px; }
+  .sec-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(26px,3.5vw,48px); font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; line-height: 1.1; margin-bottom: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #00ff9d 70%, #ffffff 100%);
+    background-size: 300% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    animation: titleShimmer 6s linear infinite;
+  }
+  @keyframes titleShimmer { to { background-position: 300% center; } }
+  /* hero h1 override — keep its own gradient */
+  .hero h1 { -webkit-text-fill-color: initial; background: none; color: var(--text); animation: fadeUp 0.8s 0.15s ease both; }
+  .hero h1 .hl { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  /* vra-title override */
+  .vra-title { -webkit-text-fill-color: initial; background: none; color: var(--text); animation: none; }
+  .vra-title .hl-gold { background: linear-gradient(135deg, #f7c948, #ffab00, #f7c948); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: goldShimmer 3s linear infinite; }
   .sec-desc { font-size: 16px; color: var(--muted); line-height: 1.85; max-width: 620px; }
 
   /* ── FEATURES ── */
   .feat-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 20px; margin-top: 64px; }
-  .feat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 36px; position: relative; overflow: hidden; transition: border-color .4s, box-shadow .4s, transform .6s, opacity .6s; opacity: 0; transform: translateY(28px); }
+  .feat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 36px; position: relative; overflow: hidden;
+    transition: border-color .4s, box-shadow .4s, transform .6s, opacity .6s;
+    opacity: 0; transform: translateY(32px);
+  }
   .feat-card.show { opacity: 1; transform: translateY(0); }
-  .feat-card:hover { border-color: rgba(0,212,255,.4); box-shadow: var(--glow); transform: translateY(-5px); }
-  .feat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg,transparent,var(--accent),transparent); opacity: 0; transition: opacity .4s; }
+  .feat-card:hover {
+    border-color: rgba(0,212,255,.5);
+    box-shadow: 0 0 40px rgba(0,212,255,.18), 0 20px 40px rgba(0,0,0,.3);
+    transform: translateY(-8px);
+  }
+  /* Animated top neon bar */
+  .feat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent3));
+    background-size: 200% auto;
+    opacity: 0; transition: opacity .4s;
+    animation: featBarFlow 3s linear infinite;
+  }
+  @keyframes featBarFlow { to { background-position: 200% center; } }
   .feat-card:hover::before { opacity: 1; }
-  .feat-icon { width: 50px; height: 50px; border-radius: 10px; background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.2); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 22px; transition: all .3s; }
-  .feat-card:hover .feat-icon { background: rgba(0,212,255,.14); box-shadow: 0 0 22px rgba(0,212,255,.2); }
-  .feat-title { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 12px; color: var(--text); line-height: 1.6; }
-  .feat-text { font-size: 14px; color: var(--muted); line-height: 1.75; }
+  /* Left accent stripe */
+  .feat-card::after {
+    content: ''; position: absolute; top: 20%; left: 0; width: 3px; height: 60%;
+    background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+    border-radius: 0 2px 2px 0; opacity: 0; transition: opacity .4s;
+  }
+  .feat-card:hover::after { opacity: 1; }
+  .feat-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: rgba(0,212,255,.07); border: 1px solid rgba(0,212,255,.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 24px; transition: all .4s;
+    box-shadow: 0 0 0 rgba(0,212,255,0);
+    position: relative;
+  }
+  .feat-icon::before {
+    content: ''; position: absolute; inset: -1px; border-radius: 14px;
+    background: linear-gradient(135deg, rgba(0,212,255,.3), rgba(0,255,157,.15), transparent);
+    opacity: 0; transition: opacity .4s;
+  }
+  .feat-card:hover .feat-icon {
+    background: rgba(0,212,255,.15);
+    box-shadow: 0 0 28px rgba(0,212,255,.35), 0 0 8px rgba(0,212,255,.15) inset;
+    transform: scale(1.08) rotate(-3deg);
+  }
+  .feat-card:hover .feat-icon::before { opacity: 1; }
+  .feat-title {
+    font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 12px; line-height: 1.6;
+    background: linear-gradient(90deg, #00d4ff, #00ff9d, #f7c948, #00d4ff);
+    background-size: 300% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    animation: featTitleFlow 4s linear infinite;
+  }
+  @keyframes featTitleFlow { to { background-position: 300% center; } }
+  /* Each card gets a slightly offset phase via delay */
+  .feat-card:nth-child(1) .feat-title { animation-delay: 0s; }
+  .feat-card:nth-child(2) .feat-title { animation-delay: -0.7s; }
+  .feat-card:nth-child(3) .feat-title { animation-delay: -1.4s; }
+  .feat-card:nth-child(4) .feat-title { animation-delay: -2.1s; }
+  .feat-card:nth-child(5) .feat-title { animation-delay: -2.8s; }
+  .feat-card:nth-child(6) .feat-title { animation-delay: -3.5s; }
+  .feat-text { font-size: 14px; color: #8aa8c0; line-height: 1.8; }
 
   /* ── HOW IT WORKS ── */
   .how-bg { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); position: relative; z-index: 1; }
@@ -263,50 +334,376 @@
   .f-brand span { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 16px; font-family: 'DM Sans', sans-serif; letter-spacing: 0; }
   .f-copy { font-size: 12px; color: var(--muted); }
 
-  /* ── VERIFIED REPORT ── */
-  .report-section { background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); position: relative; z-index: 1; }
-  .report-inner { max-width: 1320px; margin: 0 auto; padding: 100px 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-  @media(max-width:900px){ .report-inner { grid-template-columns: 1fr; gap: 48px; } }
-  .report-doc-preview { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 40px 36px; position: relative; overflow: hidden; transition: border-color .3s, box-shadow .3s; }
-  .report-doc-preview:hover { border-color: rgba(0,212,255,.35); box-shadow: var(--glow); }
-  .report-doc-preview::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent2), var(--accent)); }
-  .doc-icon { font-size: 48px; margin-bottom: 20px; display: block; }
-  .doc-title { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-  .doc-meta { font-size: 13px; color: var(--muted); line-height: 1.9; margin-bottom: 24px; }
-  .doc-meta span { display: block; }
-  .doc-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  /* ══════════════════════════════════════════════════════════
+     VERIFIED BY RAILWAY AUTHORITY  — Sci-Fi Overhaul CSS
+  ══════════════════════════════════════════════════════════ */
+
+  /* ── Section shell ── */
+  .report-section {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative; z-index: 1; overflow: hidden;
+  }
+
+  /* Animated holographic grid backdrop */
+  .report-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    animation: gridDrift 22s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes gridDrift { to { background-position: 48px 48px; } }
+
+  /* Radial glow pulse behind hero stamp */
+  .report-section::after {
+    content: '';
+    position: absolute; top: -10%; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(247,201,72,0.07) 0%, transparent 70%);
+    animation: pulseGlow 4s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes pulseGlow { from{opacity:.5} to{opacity:1} }
+
+  /* ── Hero stamp banner ── */
+  .vra-hero {
+    position: relative; z-index: 2;
+    max-width: 1320px; margin: 0 auto; padding: 80px 60px 0;
+    text-align: center;
+  }
+  @media(max-width:768px){ .vra-hero { padding: 56px 20px 0; } }
+
+  /* Animated stamp ring */
+  .vra-stamp-ring {
+    position: relative; width: 120px; height: 120px;
+    margin: 0 auto 32px; display: flex; align-items: center; justify-content: center;
+  }
+  .vra-stamp-ring svg {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    animation: spinStamp 18s linear infinite;
+  }
+  @keyframes spinStamp { to { transform: rotate(360deg); } }
+  .vra-stamp-inner {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(247,201,72,.2), rgba(247,201,72,.05));
+    border: 2px solid rgba(247,201,72,.6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+    box-shadow: 0 0 28px rgba(247,201,72,.35), inset 0 0 18px rgba(247,201,72,.1);
+    animation: stampPulse 2.8s ease-in-out infinite;
+  }
+  @keyframes stampPulse {
+    0%,100%{ box-shadow: 0 0 20px rgba(247,201,72,.3), inset 0 0 14px rgba(247,201,72,.1); }
+    50%    { box-shadow: 0 0 50px rgba(247,201,72,.6), inset 0 0 28px rgba(247,201,72,.2); }
+  }
+
+  /* Scanning beam over the whole section */
+  .vra-scan-beam {
+    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.04), transparent);
+    animation: beamSweep 5s ease-in-out infinite;
+    pointer-events: none; z-index: 1;
+  }
+  @keyframes beamSweep { 0%{left:-60%} 100%{left:110%} }
+
+  /* CLASSIFIED/VERIFIED ribbon */
+  .vra-ribbon {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(90deg, rgba(247,201,72,0.12), rgba(247,201,72,0.06));
+    border: 1px solid rgba(247,201,72,0.4);
+    border-radius: 4px; padding: 9px 22px;
+    font-family: 'Orbitron', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--accent3);
+    margin-bottom: 24px; position: relative; overflow: hidden;
+  }
+  .vra-ribbon::before {
+    content: '';
+    position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg,transparent,rgba(247,201,72,.15),transparent);
+    animation: ribbonSheen 2.5s ease-in-out infinite 1s;
+  }
+  @keyframes ribbonSheen { to { left: 200%; } }
+  .vra-ribbon-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent3); animation: pulse 1.4s ease infinite;
+  }
+
+  /* Section title */
+  .vra-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(28px, 4.5vw, 58px);
+    font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    line-height: 1.05; margin-bottom: 18px;
+  }
+  .vra-title .hl-gold {
+    background: linear-gradient(135deg, #f7c948, #ffab00, #f7c948);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: goldShimmer 3s linear infinite;
+  }
+  @keyframes goldShimmer { to { background-position: 200% center; } }
+  .vra-desc {
+    font-size: 16px; color: var(--muted); line-height: 1.85;
+    max-width: 640px; margin: 0 auto 56px;
+  }
+
+  /* ── Authority identity panel ── */
+  .vra-authority {
+    position: relative; z-index: 2;
+    max-width: 900px; margin: 0 auto 72px;
+    padding: 0 60px;
+  }
+  @media(max-width:768px){ .vra-authority { padding: 0 20px; } }
+
+  .vra-auth-card {
+    background: linear-gradient(135deg, rgba(247,201,72,0.07), rgba(10,21,37,0.95));
+    border: 1px solid rgba(247,201,72,0.35);
+    border-radius: 16px; padding: 36px 40px;
+    display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
+    position: relative; overflow: hidden;
+    box-shadow: 0 0 60px rgba(247,201,72,0.08), inset 0 0 40px rgba(247,201,72,0.03);
+  }
+  /* Corner accent brackets */
+  .vra-auth-card::before, .vra-auth-card::after {
+    content: '';
+    position: absolute; width: 20px; height: 20px;
+    border-color: rgba(247,201,72,0.6); border-style: solid;
+  }
+  .vra-auth-card::before { top: 10px; left: 10px; border-width: 2px 0 0 2px; border-radius: 3px 0 0 0; }
+  .vra-auth-card::after  { bottom: 10px; right: 10px; border-width: 0 2px 2px 0; border-radius: 0 0 3px 0; }
+
+  .vra-auth-avatar {
+    width: 68px; height: 68px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(247,201,72,.25), rgba(247,201,72,.05));
+    border: 2px solid rgba(247,201,72,.5);
+    display: flex; align-items: center; justify-content: center; font-size: 28px;
+    box-shadow: 0 0 24px rgba(247,201,72,.25);
+    animation: avatarBreath 3s ease-in-out infinite;
+  }
+  @keyframes avatarBreath {
+    0%,100%{ transform: scale(1); box-shadow: 0 0 18px rgba(247,201,72,.2); }
+    50%    { transform: scale(1.04); box-shadow: 0 0 36px rgba(247,201,72,.45); }
+  }
+  .vra-auth-info { flex: 1; min-width: 200px; }
+  .vra-auth-name {
+    font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase; color: var(--text); margin-bottom: 4px;
+  }
+  .vra-auth-role { font-size: 13px; color: var(--accent3); font-weight: 600; margin-bottom: 3px; }
+  .vra-auth-org  { font-size: 12px; color: var(--muted); }
+  .vra-auth-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .vra-auth-badge {
+    font-family: 'Orbitron', monospace; font-size: 7px; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase;
+    padding: 5px 11px; border-radius: 3px;
+    background: rgba(247,201,72,.1); border: 1px solid rgba(247,201,72,.3);
+    color: var(--accent3);
+    animation: badgePop .4s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  .vra-auth-badge:nth-child(2){ animation-delay:.08s }
+  .vra-auth-badge:nth-child(3){ animation-delay:.16s }
+  @keyframes badgePop { from{opacity:0;transform:scale(.7)} to{opacity:1;transform:scale(1)} }
+
+  /* Verified checkmark side */
+  .vra-auth-seal {
+    display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0;
+  }
+  .vra-seal-circle {
+    width: 58px; height: 58px; border-radius: 50%;
+    background: rgba(0,255,157,.08); border: 2px solid rgba(0,255,157,.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 0 22px rgba(0,255,157,.2);
+    animation: sealPulse 2s ease-in-out infinite;
+  }
+  @keyframes sealPulse {
+    0%,100%{ box-shadow: 0 0 16px rgba(0,255,157,.15); }
+    50%    { box-shadow: 0 0 38px rgba(0,255,157,.45); }
+  }
+  .vra-seal-label {
+    font-family: 'Orbitron', monospace; font-size: 7px; font-weight: 700;
+    letter-spacing: 1px; color: var(--accent2); text-transform: uppercase; text-align: center;
+  }
+
+  /* ── Station report cards ── */
+  .vra-grid-wrap {
+    position: relative; z-index: 2;
+    max-width: 1320px; margin: 0 auto; padding: 0 60px 100px;
+  }
+  @media(max-width:768px){ .vra-grid-wrap { padding: 0 20px 72px; } }
+
+  .vra-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+    gap: 20px;
+  }
+
+  /* Individual station card */
+  .vra-card {
+    position: relative; border-radius: 14px; overflow: hidden;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.07);
+    cursor: default;
+    transition: transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s;
+    opacity: 0; transform: translateY(30px);
+  }
+  .vra-card.vra-visible { animation: cardReveal .6s cubic-bezier(.16,1,.3,1) forwards; }
+  @keyframes cardReveal { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+  .vra-card.vra-visible:hover { transform: translateY(-8px) scale(1.01); }
+
+  /* Neon top bar */
+  .vra-card-bar {
+    height: 3px; width: 100%;
+    position: relative; overflow: hidden;
+  }
+  .vra-card-bar::after {
+    content: '';
+    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: rgba(255,255,255,0.5);
+    animation: barSheen 3s ease-in-out infinite;
+  }
+  @keyframes barSheen { to { left: 200%; } }
+
+  /* Corner bracket decorations */
+  .vra-card-corner {
+    position: absolute; width: 14px; height: 14px;
+    border-style: solid; transition: border-color .3s;
+  }
+  .vra-card-corner.tl { top: 8px; left: 8px; border-width: 1.5px 0 0 1.5px; border-radius: 3px 0 0 0; }
+  .vra-card-corner.br { bottom: 8px; right: 8px; border-width: 0 1.5px 1.5px 0; border-radius: 0 0 3px 0; }
+
+  /* Card body */
+  .vra-card-body { padding: 28px; position: relative; }
+
+  /* Station index number */
+  .vra-card-index {
+    position: absolute; top: 20px; right: 24px;
+    font-family: 'Orbitron', monospace; font-size: 32px; font-weight: 900;
+    line-height: 1; opacity: 0.08; user-select: none;
+  }
+
+  .vra-card-ico { font-size: 28px; margin-bottom: 14px; display: block; }
+
+  .vra-card-station {
+    font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase; color: var(--text);
+    margin-bottom: 3px;
+  }
+  .vra-card-loc { font-size: 11px; color: var(--muted); margin-bottom: 18px; }
+
+  /* Energy saving % — big glowing number */
+  .vra-card-pct {
+    font-family: 'Orbitron', monospace; font-size: 38px; font-weight: 900;
+    line-height: 1; margin-bottom: 4px;
+    display: inline-block;
+  }
+  .vra-card-pct-label {
+    font-size: 10px; color: var(--muted); letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+
+  /* Animated energy bar */
+  .vra-energy-track {
+    height: 4px; background: rgba(255,255,255,.05);
+    border-radius: 100px; margin-bottom: 22px; overflow: hidden;
+  }
+  .vra-energy-fill {
+    height: 100%; border-radius: 100px; width: 0;
+    transition: width 1.6s cubic-bezier(.16,1,.3,1) .3s;
+  }
+  .vra-card.vra-visible .vra-energy-fill { width: var(--fill-pct); }
+
+  /* Status row */
+  .vra-card-status {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px;
+  }
+  .vra-status-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'Orbitron', monospace; font-size: 7.5px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 3px;
+  }
+  .vra-status-chip.verified {
+    background: rgba(0,255,157,.08); border: 1px solid rgba(0,255,157,.3); color: var(--accent2);
+  }
+  .vra-status-chip.stamped {
+    background: rgba(247,201,72,.08); border: 1px solid rgba(247,201,72,.3); color: var(--accent3);
+  }
+  .vra-chip-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    animation: pulse 1.6s ease infinite;
+  }
+  .vra-status-chip.verified .vra-chip-dot { background: var(--accent2); }
+  .vra-status-chip.stamped  .vra-chip-dot { background: var(--accent3); }
+
+  /* Action buttons */
+  .vra-card-actions { display: flex; gap: 10px; }
+  .vra-btn-view {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    font-family: 'Orbitron', monospace; font-size: 8.5px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; text-decoration: none;
+    padding: 11px 14px; border-radius: 4px; position: relative; overflow: hidden;
+    color: #050a12; transition: all .3s;
+    box-shadow: 0 0 18px rgba(0,212,255,.2);
+  }
+  .vra-btn-view::after {
+    content: '';
+    position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+    transition: left .5s;
+  }
+  .vra-btn-view:hover::after { left: 100%; }
+  .vra-btn-view:hover { transform: translateY(-2px); box-shadow: 0 0 36px rgba(0,212,255,.5); }
+
+  .vra-btn-dl {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    font-family: 'Orbitron', monospace; font-size: 8.5px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; text-decoration: none;
+    padding: 11px 14px; border-radius: 4px;
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border); transition: all .3s;
+  }
+  .vra-btn-dl:hover { border-color: rgba(0,255,157,.4); color: var(--accent2); background: rgba(0,255,157,.05); }
+
+  /* ── Bottom verification note ── */
+  .vra-note {
+    position: relative; z-index: 2;
+    max-width: 1320px; margin: 0 auto;
+    padding: 0 60px 0;
+    margin-bottom: -1px;
+  }
+  @media(max-width:768px){ .vra-note { padding: 0 20px; } }
+  .vra-note-inner {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: rgba(0,255,157,.03);
+    border: 1px solid rgba(0,255,157,.14);
+    border-radius: 10px; padding: 20px 24px;
+    margin-bottom: 60px;
+  }
+  .vra-note-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .vra-note-text { font-size: 13.5px; color: var(--muted); line-height: 1.8; }
+  .vra-note-text strong { color: var(--accent2); }
+
+  /* doc-badge kept for backwards compat */
   .doc-badge { display: inline-flex; align-items: center; gap: 6px; font-family: 'Orbitron', monospace; font-size: 8px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 6px 12px; border-radius: 4px; }
   .doc-badge.green { background: rgba(0,255,157,.08); border: 1px solid rgba(0,255,157,.25); color: var(--accent2); }
   .doc-badge.blue  { background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.25); color: var(--accent); }
   .doc-badge.gold  { background: rgba(247,201,72,.08); border: 1px solid rgba(247,201,72,.25); color: var(--accent3); }
-  .doc-actions { display: flex; gap: 12px; flex-wrap: wrap; }
   .btn-view { display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: #050a12; font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; padding: 14px 28px; border-radius: 4px; text-decoration: none; letter-spacing: 1.2px; text-transform: uppercase; transition: all .3s; box-shadow: 0 0 24px rgba(0,212,255,.25); position: relative; overflow: hidden; }
   .btn-view::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent); transition:left .5s; }
   .btn-view:hover::after { left:100%; }
   .btn-view:hover { box-shadow: 0 0 40px rgba(0,212,255,.45); transform: translateY(-2px); }
   .btn-dl { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: var(--text); font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; padding: 14px 28px; border-radius: 4px; text-decoration: none; letter-spacing: 1.2px; text-transform: uppercase; border: 1px solid var(--border); transition: all .3s; }
   .btn-dl:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(0,255,157,.05); }
-  .report-authority { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; margin-top: 28px; display: flex; align-items: flex-start; gap: 16px; }
-  .authority-icon { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; background: rgba(247,201,72,.1); border: 1px solid rgba(247,201,72,.3); display: flex; align-items: center; justify-content: center; font-size: 20px; }
-  .authority-name { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
-  .authority-role { font-size: 12px; color: var(--accent3); font-weight: 500; margin-bottom: 4px; }
-  .authority-org { font-size: 12px; color: var(--muted); }
-  .report-note { font-size: 14px; color: var(--muted); line-height: 1.8; margin-top: 20px; padding: 16px 18px; background: rgba(0,212,255,.04); border-left: 2px solid var(--accent); border-radius: 0 6px 6px 0; }
-
-  .rep-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 20px; }
-  .rep-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color .3s, box-shadow .3s, transform .3s; }
-  .rep-card:hover { border-color: rgba(0,212,255,.4); box-shadow: var(--glow); transform: translateY(-4px); }
-  .rep-top { height: 4px; }
-  .dc1-bg { background: linear-gradient(90deg,#00d4ff,#00a8cc); }
-  .dc2-bg { background: linear-gradient(90deg,#00ff9d,#00cc7a); }
-  .dc3-bg { background: linear-gradient(90deg,#f7c948,#e0a800); }
-  .dc4-bg { background: linear-gradient(90deg,#ff6b35,#cc4400); }
-  .rep-body { padding: 28px 26px; }
-  .rep-ico { font-size: 32px; display: block; margin-bottom: 14px; }
-  .rep-station { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
-  .rep-loc { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
-  .rep-saving { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; color: var(--accent2); letter-spacing: 1px; margin-bottom: 18px; }
-  .rep-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .report-authority { display:none; }
+  .report-note { display:none; }
+  .rep-grid { display:none; }
 
   /* ── PRICING ── */
   .price-bg { background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); position: relative; z-index: 1; }
@@ -386,6 +783,198 @@
     .price-grid { grid-template-columns: 1fr !important; }
     .rep-actions { flex-wrap: wrap; }
   }
+
+  /* ══════════════════════════════════════════════════════════════
+     SITE-WIDE SCI-FI ANIMATIONS
+  ══════════════════════════════════════════════════════════════ */
+
+  /* ── Universal section holographic grid (all major sections) ── */
+  .how-bg, .rpt-bg, .specs-bg, .abt-bg, .price-bg, #applications {
+    position: relative;
+  }
+  .how-bg::before, .rpt-bg::before, .specs-bg::before, .abt-bg::before {
+    content: '';
+    position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+    background-size: 56px 56px;
+    animation: gridDrift 28s linear infinite;
+  }
+  .how-bg > *, .rpt-bg > *, .specs-bg > *, .abt-bg > * { position: relative; z-index: 1; }
+
+  /* ── Glowing corner brackets on all .sec sections ── */
+  .feat-card::after {
+    content: '';
+    position: absolute; bottom: 8px; right: 8px;
+    width: 12px; height: 12px;
+    border-right: 1.5px solid rgba(0,212,255,0.3);
+    border-bottom: 1.5px solid rgba(0,212,255,0.3);
+    border-radius: 0 0 3px 0;
+    transition: border-color .4s;
+  }
+  .feat-card:hover::after { border-color: rgba(0,212,255,0.7); }
+
+  /* ── Step numbers animated glow ── */
+  .step.show .step-num {
+    animation: stepNumPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes stepNumPulse {
+    0%,100%{ box-shadow: 0 0 12px rgba(0,212,255,.2); }
+    50%    { box-shadow: 0 0 28px rgba(0,212,255,.55), 0 0 8px rgba(0,212,255,.3) inset; }
+  }
+
+  /* ── Stats strip — neon scan line across on load ── */
+  .stats-strip {
+    position: relative; overflow: hidden;
+  }
+  .stats-strip::after {
+    content: '';
+    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.05), transparent);
+    animation: beamSweep 6s ease-in-out infinite 1s;
+    pointer-events: none;
+  }
+
+  /* ── stat-item hover neon underline ── */
+  .stat-item { position: relative; }
+  .stat-item::after {
+    content: '';
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width .4s ease;
+  }
+  .stat-item:hover::after { width: 60%; }
+
+  /* ── res-card neon glow pulse on show ── */
+  .res-card.show {
+    animation: resCardIn .5s cubic-bezier(.16,1,.3,1) both;
+  }
+  @keyframes resCardIn {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── Pricing cards — staggered appear + top bar on hover ── */
+  .price-card {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity .5s, transform .5s, border-color .3s, box-shadow .3s;
+  }
+  .price-card.pc-show { opacity: 1; transform: translateY(0); }
+
+  /* ── App cards — radial glow on hover ── */
+  .app-card { position: relative; overflow: hidden; }
+  .app-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(0,212,255,.08) 0%, transparent 70%);
+    opacity: 0; transition: opacity .4s;
+  }
+  .app-card:hover::after { opacity: 1; }
+
+  /* ── ROI box — animated border glow on appear ── */
+  .roi-box {
+    transition: box-shadow .5s;
+    animation: roiBoxAppear .8s cubic-bezier(.16,1,.3,1) both;
+  }
+  @keyframes roiBoxAppear {
+    from { opacity:0; transform:translateX(20px); }
+    to   { opacity:1; transform:translateX(0); }
+  }
+
+  /* ── Specs table row — neon left flash on hover ── */
+  .stbl tr { position: relative; }
+  .stbl tr::before {
+    content: '';
+    position: absolute; top: 0; left: 0; width: 0; height: 100%;
+    background: linear-gradient(90deg, rgba(0,212,255,0.06), transparent);
+    transition: width .3s ease;
+  }
+  .stbl tr:hover::before { width: 100%; }
+
+  /* ── Footer scan beam ── */
+  footer { position: relative; overflow: hidden; }
+  footer::before {
+    content: '';
+    position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.04), transparent);
+    animation: beamSweep 8s ease-in-out infinite 2s;
+    pointer-events: none;
+  }
+
+  /* ── About section avatar orbital ring ── */
+  .abt-av {
+    position: relative;
+    animation: avatarOrbit 3s ease-in-out infinite;
+  }
+  @keyframes avatarOrbit {
+    0%,100%{ box-shadow: 0 0 30px rgba(0,212,255,.25); }
+    50%    { box-shadow: 0 0 55px rgba(0,212,255,.55), 0 0 80px rgba(0,255,157,.15); }
+  }
+
+  /* ── Typewriter cursor blink on sec-label (not sec-title) ── */
+  /* sec-label cursor removed - interferes with glitch JS effect */
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* ── Data table rows — stagger fade in ── */
+  .tbl tbody tr {
+    opacity: 0; transform: translateX(-10px);
+    transition: background .2s;
+    animation: tblRowIn .4s ease forwards;
+  }
+  .tbl tbody tr:nth-child(1){ animation-delay:.05s }
+  .tbl tbody tr:nth-child(2){ animation-delay:.12s }
+  .tbl tbody tr:nth-child(3){ animation-delay:.19s }
+  .tbl tbody tr:nth-child(4){ animation-delay:.26s }
+  @keyframes tblRowIn { to { opacity:1; transform:translateX(0); } }
+
+  /* ── Impact cards — scale-in ── */
+  .imp-card {
+    opacity: 0; transform: scale(.9);
+    animation: impIn .5s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  .imp-card:nth-child(1){ animation-delay:.1s }
+  .imp-card:nth-child(2){ animation-delay:.2s }
+  .imp-card:nth-child(3){ animation-delay:.3s }
+  .imp-card:nth-child(4){ animation-delay:.4s }
+  @keyframes impIn { to { opacity:1; transform:scale(1); } }
+
+  /* ── Section entry reveal ── */
+  .sec-reveal {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .sec-reveal.sr-show { opacity: 1; transform: translateY(0); }
+
+  /* ── Neon underline sweep on headings ── */
+  .sec-title {
+    position: relative; display: inline-block;
+  }
+  /* Use data-underline wrapper span instead of ::after (gradient text blocks pseudo) */
+  .sec-title-ul {
+    display: block; height: 2px; width: 0; margin-top: 8px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+    border-radius: 2px;
+    transition: width .9s cubic-bezier(.16,1,.3,1);
+    box-shadow: 0 0 8px rgba(0,212,255,.4);
+  }
+  .sr-show .sec-title-ul,
+  .sec-title-ul.ul-show { width: 100%; }
+
+  /* ── Vis-box — rotating border gradient ── */
+  .vis-box {
+    background-image: linear-gradient(var(--bg), var(--bg)),
+      conic-gradient(from 0deg, var(--accent), var(--accent2), var(--accent3), var(--accent));
+    background-origin: border-box;
+    border: 1.5px solid transparent;
+    background-clip: padding-box, border-box;
+    animation: conicSpin 6s linear infinite;
+  }
+  @keyframes conicSpin {
+    to { filter: hue-rotate(360deg); }
+  }
+
 </style>
 </head>
 <body>
@@ -453,6 +1042,7 @@
   <div class="wrap">
     <div class="sec-label">Core Capabilities</div>
     <h2 class="sec-title">Built for intelligence,<br/>designed for impact</h2>
+    <div class="sec-title-ul"></div>
     <p class="sec-desc">Every feature engineered to maximise energy savings with zero compromise on comfort or reliability.</p>
     <div class="feat-grid">
       <div class="feat-card"><div class="feat-icon">🧠</div><div class="feat-title">AI Occupancy Detection</div><p class="feat-text">Advanced AI algorithms continuously monitor presence in real time, ensuring fans activate only when people are in the space.</p></div>
@@ -471,6 +1061,7 @@
     <div>
       <div class="sec-label">Process</div>
       <h2 class="sec-title">How the system works</h2>
+    <div class="sec-title-ul"></div>
       <div class="steps">
         <div class="step"><div class="step-line"><div class="step-num">01</div><div class="step-conn"></div></div><div class="step-body"><div class="step-title">Continuous AI Monitoring</div><p class="step-text">The AI module constantly scans the area using intelligent detection, building an accurate real-time presence map of the space.</p></div></div>
         <div class="step"><div class="step-line"><div class="step-num">02</div><div class="step-conn"></div></div><div class="step-body"><div class="step-title">Presence Confirmed — Fan On</div><p class="step-text">When people are detected, the fan runs at normal speed. Comfort is never compromised when the space is occupied.</p></div></div>
@@ -500,6 +1091,7 @@
   <div class="wrap">
     <div class="sec-label">Field Deployment</div>
     <h2 class="sec-title">Real results,<br/>real stations</h2>
+    <div class="sec-title-ul"></div>
     <p class="sec-desc">Proven AI-based performance at four of Mumbai's busiest railway stations — one month demonstration per station.</p>
     <div class="res-grid">
       <div class="res-card" data-delay="0"><div class="res-name">Mumbai Central</div><div class="res-loc">📍 Mumbai, Maharashtra</div><div class="res-bar-wrap"><div class="res-bar" style="--pct:79.6%"></div></div><div class="res-pct">79.6%</div><div class="res-sub">Energy Saved · 15.2 units/month</div></div>
@@ -516,10 +1108,11 @@
 
     <div class="sec-label">Visual Analysis</div>
     <h2 class="sec-title">Energy savings at a glance</h2>
+    <div class="sec-title-ul"></div>
     <p class="sec-desc" style="margin-bottom:56px;">Real one-month field data — ordinary fan power consumption versus AI Smart Fan, and total monthly savings per station.</p>
 
     <!-- CHART 1: Ordinary Fan vs AI Device Units -->
-    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:36px 32px 32px;position:relative;margin-bottom:32px;overflow:hidden;">
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:36px 32px 32px;position:relative;margin-bottom:32px;">
       <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#ff6b35,#00d4ff);border-radius:16px 16px 0 0;"></div>
       <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px;">
         <div>
@@ -527,17 +1120,19 @@
           <div style="font-family:'Rajdhani',sans-serif;font-size:clamp(18px,2.5vw,24px);font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);">Ordinary Fan vs AI Smart Fan <span style="font-size:13px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:'DM Sans',sans-serif;">(units consumed / month)</span></div>
         </div>
       </div>
-      <div style="position:relative;width:100%;height:340px;">
-        <canvas id="chart-units"></canvas>
+      <div style="position:relative;width:100%;height:360px;min-height:260px;">
+        <canvas id="chart-units" style="display:block;width:100%;"></canvas>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
-        <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500;"><span style="width:12px;height:12px;border-radius:3px;background:#ff6b35;display:inline-block;flex-shrink:0;box-shadow:0 0 8px rgba(255,107,53,0.5);"></span>Ordinary Fan (Without AI Device)</span>
-        <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500;"><span style="width:12px;height:12px;border-radius:3px;background:#00ff9d;display:inline-block;flex-shrink:0;box-shadow:0 0 8px rgba(0,255,157,0.5);"></span>AI Smart Fan (With Device)</span>
+      <div id="chart1-legend-wrap">
+        <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+          <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500;"><span style="width:12px;height:12px;border-radius:3px;background:#ff6b35;display:inline-block;flex-shrink:0;box-shadow:0 0 8px rgba(255,107,53,0.5);"></span>Ordinary Fan (Without AI Device)</span>
+          <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500;"><span style="width:12px;height:12px;border-radius:3px;background:#00ff9d;display:inline-block;flex-shrink:0;box-shadow:0 0 8px rgba(0,255,157,0.5);"></span>AI Smart Fan (With Device)</span>
+        </div>
       </div>
     </div>
 
     <!-- CHART 2: Monthly Savings in Rs per Station -->
-    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:36px 32px 32px;position:relative;margin-bottom:32px;overflow:hidden;">
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:36px 32px 32px;position:relative;margin-bottom:32px;">
       <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#f7c948,#00ff9d);border-radius:16px 16px 0 0;"></div>
       <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px;">
         <div>
@@ -545,12 +1140,14 @@
           <div style="font-family:'Rajdhani',sans-serif;font-size:clamp(18px,2.5vw,24px);font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);">Total Monthly Cost Saving per Station <span style="font-size:13px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:'DM Sans',sans-serif;">(units saved × ₹11)</span></div>
         </div>
       </div>
-      <div style="position:relative;width:100%;height:340px;">
-        <canvas id="chart-saving"></canvas>
+      <div style="position:relative;width:100%;height:360px;min-height:260px;">
+        <canvas id="chart-saving" style="display:block;width:100%;"></canvas>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
-        <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500;"><span style="width:12px;height:12px;border-radius:3px;background:#00ff9d;display:inline-block;flex-shrink:0;box-shadow:0 0 8px rgba(0,255,157,0.5);"></span>Monthly Saving (₹ per fan)</span>
-        <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500;"><span style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--accent3);">= units saved × ₹11</span></span>
+      <div id="chart2-legend-wrap">
+        <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+          <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500;"><span style="width:12px;height:12px;border-radius:3px;background:#00ff9d;display:inline-block;flex-shrink:0;box-shadow:0 0 8px rgba(0,255,157,0.5);"></span>Monthly Saving (₹ per fan)</span>
+          <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500;"><span style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--accent3);">= units saved × ₹11</span></span>
+        </div>
       </div>
     </div>
 
@@ -597,6 +1194,7 @@
   <div class="wrap">
     <div class="sec-label">Demonstration Report</div>
     <h2 class="sec-title">Complete field data —<br/>one month per station</h2>
+    <div class="sec-title-ul"></div>
     <p class="sec-desc">Comprehensive energy and cost analysis from real-world AI-based deployment across all four railway stations.</p>
     <div class="tabs">
       <button class="tbtn on" onclick="doTab('energy',this)">Energy Performance</button>
@@ -666,6 +1264,7 @@
     <div>
       <div class="sec-label">Technical Specifications</div>
       <h2 class="sec-title">Built to spec</h2>
+    <div class="sec-title-ul"></div>
       <table class="stbl">
         <tr><td>Product Type</td><td>AI Smart Fan Energy Saving Controller</td></tr>
         <tr><td>Detection Tech</td><td>AI-Based Presence Detection</td></tr>
@@ -680,6 +1279,7 @@
     <div>
       <div class="sec-label">Return on Investment</div>
       <h2 class="sec-title">Pays for itself</h2>
+    <div class="sec-title-ul"></div>
       <div class="roi-box" id="roi-box">
         <div class="roi-ttl">Investment Recovery Timeline</div>
         <div style="position:relative;padding-top:36px;">
@@ -698,6 +1298,7 @@
   <div class="wrap">
     <div class="sec-label">Pricing & Warranty</div>
     <h2 class="sec-title">Simple, transparent<br/>pricing</h2>
+    <div class="sec-title-ul"></div>
     <p class="sec-desc">One device. One price. Choose the warranty coverage that fits your organisation's needs.</p>
 
     <div class="price-grid">
@@ -772,6 +1373,7 @@
 
     <div class="sec-label">About the Company</div>
     <h2 class="sec-title">Company &amp;<br/>Product Details</h2>
+    <div class="sec-title-ul"></div>
     <p class="sec-desc" style="margin-bottom:56px;">Complete information about Laxman Enterprise and the AI Smart Fan Energy Saving Device.</p>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-bottom:24px;">
@@ -871,113 +1473,192 @@
   </div>
 </div>
 
-<!-- ORIGINAL VERIFIED REPORT -->
+<!-- ═══════════════════════════════════════════════════════════
+     VERIFIED BY RAILWAY AUTHORITY  — Sci-Fi Showcase
+════════════════════════════════════════════════════════════ -->
 <div class="report-section" id="original-report">
-  <div style="max-width:1320px;margin:0 auto;padding:100px 60px;">
 
-    <div class="sec-label">Official Documentation</div>
-    <h2 class="sec-title">Verified by Railway Authority</h2>
-    <p class="sec-desc" style="margin-bottom:16px;">Each station has its own officially signed and stamped report, verified by a Senior Section Engineer of Indian Railways — confirming real metered energy savings.</p>
+  <!-- animated scan beam that sweeps the whole section -->
+  <div class="vra-scan-beam"></div>
 
-    <!-- Authority Badge -->
-    <div class="report-authority" style="max-width:520px;margin-bottom:56px;">
-      <div class="authority-icon">🏅</div>
-      <div>
-        <div class="authority-name">Senior Section Engineer</div>
-        <div class="authority-role">Indian Railways — Western Railway Zone</div>
-        <div class="authority-org">Mumbai Division · Government of India</div>
+  <!-- ── Hero stamp + title ── -->
+  <div class="vra-hero">
+
+    <!-- Spinning dashed stamp ring -->
+    <div class="vra-stamp-ring">
+      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="56" stroke="rgba(247,201,72,0.35)" stroke-width="1" stroke-dasharray="6 4"/>
+        <circle cx="60" cy="60" r="48" stroke="rgba(247,201,72,0.18)" stroke-width="0.5" stroke-dasharray="3 8"/>
+        <!-- rotating tick marks -->
+        <line x1="60" y1="4"  x2="60" y2="12" stroke="rgba(247,201,72,0.7)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="60" y1="108" x2="60" y2="116" stroke="rgba(247,201,72,0.7)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="4"  y1="60" x2="12" y2="60"  stroke="rgba(247,201,72,0.7)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="108" y1="60" x2="116" y2="60" stroke="rgba(247,201,72,0.7)" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="vra-stamp-inner">🏅</div>
+    </div>
+
+    <!-- Ribbon tag -->
+    <div style="display:flex;justify-content:center;">
+      <div class="vra-ribbon">
+        <span class="vra-ribbon-dot"></span>
+        OFFICIAL GOVERNMENT VERIFIED DOCUMENTATION
+        <span class="vra-ribbon-dot"></span>
       </div>
     </div>
 
-    <!-- 4 Station Report Cards -->
-    <div class="rep-grid">
-
-      <div class="rep-card">
-        <div class="rep-top dc1-bg"></div>
-        <div class="rep-body">
-          <span class="rep-ico">📄</span>
-          <div class="rep-station">Mumbai Central</div>
-          <div class="rep-loc">📍 Mumbai, Maharashtra</div>
-          <div class="rep-saving">79.6% Energy Saved</div>
-          <div class="doc-badges" style="margin-bottom:24px;">
-            <span class="doc-badge green">✔ Verified</span>
-            <span class="doc-badge gold">🏛 Stamped</span>
-          </div>
-          <div class="rep-actions">
-            <a href="report-mumbai-central.pdf" target="_blank" rel="noopener" class="btn-view" style="font-size:9px;padding:11px 18px;">👁 View</a>
-            <a href="report-mumbai-central.pdf" download="Report_Mumbai_Central.pdf" class="btn-dl" style="font-size:9px;padding:11px 18px;">⬇ Download</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="rep-card">
-        <div class="rep-top dc2-bg"></div>
-        <div class="rep-body">
-          <span class="rep-ico">📄</span>
-          <div class="rep-station">Bandra</div>
-          <div class="rep-loc">📍 Bandra, Mumbai</div>
-          <div class="rep-saving">61.5% Energy Saved</div>
-          <div class="doc-badges" style="margin-bottom:24px;">
-            <span class="doc-badge green">✔ Verified</span>
-            <span class="doc-badge gold">🏛 Stamped</span>
-          </div>
-          <div class="rep-actions">
-            <a href="report-bandra.pdf" target="_blank" rel="noopener" class="btn-view" style="font-size:9px;padding:11px 18px;">👁 View</a>
-            <a href="report-bandra.pdf" download="Report_Bandra.pdf" class="btn-dl" style="font-size:9px;padding:11px 18px;">⬇ Download</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="rep-card">
-        <div class="rep-top dc3-bg"></div>
-        <div class="rep-body">
-          <span class="rep-ico">📄</span>
-          <div class="rep-station">Andheri</div>
-          <div class="rep-loc">📍 Andheri, Mumbai</div>
-          <div class="rep-saving">61.4% Energy Saved</div>
-          <div class="doc-badges" style="margin-bottom:24px;">
-            <span class="doc-badge green">✔ Verified</span>
-            <span class="doc-badge gold">🏛 Stamped</span>
-          </div>
-          <div class="rep-actions">
-            <a href="report-andheri.pdf" target="_blank" rel="noopener" class="btn-view" style="font-size:9px;padding:11px 18px;">👁 View</a>
-            <a href="report-andheri.pdf" download="Report_Andheri.pdf" class="btn-dl" style="font-size:9px;padding:11px 18px;">⬇ Download</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="rep-card">
-        <div class="rep-top dc4-bg"></div>
-        <div class="rep-body">
-          <span class="rep-ico">📄</span>
-          <div class="rep-station">Ram Mandir</div>
-          <div class="rep-loc">📍 Ram Mandir, Mumbai</div>
-          <div class="rep-saving">71.1% Energy Saved</div>
-          <div class="doc-badges" style="margin-bottom:24px;">
-            <span class="doc-badge green">✔ Verified</span>
-            <span class="doc-badge gold">🏛 Stamped</span>
-          </div>
-          <div class="rep-actions">
-            <a href="report-ram-mandir.pdf" target="_blank" rel="noopener" class="btn-view" style="font-size:9px;padding:11px 18px;">👁 View</a>
-            <a href="report-ram-mandir.pdf" download="Report_Ram_Mandir.pdf" class="btn-dl" style="font-size:9px;padding:11px 18px;">⬇ Download</a>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- end rep-grid -->
-
-    <p class="report-note" style="max-width:700px;margin-top:40px;">
-      All reports contain real metered energy readings taken over one month at each station, with official signatures and authority stamps confirming the demonstrated energy savings.
-    </p>
-
+    <h2 class="vra-title">Verified by <span class="hl-gold">Railway<br/>Authority</span></h2>
+    <p class="vra-desc">Each station has its own officially signed and stamped report, verified by a Senior Section Engineer of Indian Railways — confirming real metered energy savings with government authority.</p>
   </div>
-</div>
+
+  <!-- ── Authority identity panel ── -->
+  <div class="vra-authority">
+    <div class="vra-auth-card">
+      <div class="vra-auth-avatar">🎖️</div>
+      <div class="vra-auth-info">
+        <div class="vra-auth-name">Senior Section Engineer</div>
+        <div class="vra-auth-role">Indian Railways — Western Railway Zone</div>
+        <div class="vra-auth-org">Mumbai Division · Government of India</div>
+        <div class="vra-auth-badges">
+          <span class="vra-auth-badge">🏛 Government Authority</span>
+          <span class="vra-auth-badge">📋 Official Signatory</span>
+          <span class="vra-auth-badge">⚡ Metered Data</span>
+        </div>
+      </div>
+      <div class="vra-auth-seal">
+        <div class="vra-seal-circle">✅</div>
+        <div class="vra-seal-label">Authority<br/>Verified</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4 Station Report Cards ── -->
+  <div class="vra-grid-wrap">
+    <div class="vra-grid">
+
+      <!-- Card 1: Mumbai Central -->
+      <div class="vra-card" data-vra-delay="0">
+        <div class="vra-card-bar" style="background:linear-gradient(90deg,#00d4ff,#0080ff);"></div>
+        <div class="vra-card-corner tl" style="border-color:rgba(0,212,255,0.5);"></div>
+        <div class="vra-card-corner br" style="border-color:rgba(0,212,255,0.5);"></div>
+        <div class="vra-card-body">
+          <div class="vra-card-index">01</div>
+          <span class="vra-card-ico">📄</span>
+          <div class="vra-card-station">Mumbai Central</div>
+          <div class="vra-card-loc">📍 Mumbai, Maharashtra</div>
+          <div class="vra-card-pct" style="color:#00d4ff;text-shadow:0 0 20px rgba(0,212,255,0.6),0 0 40px rgba(0,212,255,0.3);">79.6%</div>
+          <div class="vra-card-pct-label">Energy Saved · 15.2 units/month</div>
+          <div class="vra-energy-track">
+            <div class="vra-energy-fill" style="--fill-pct:79.6%;background:linear-gradient(90deg,#00d4ff,#00ff9d);box-shadow:0 0 12px rgba(0,212,255,.5);"></div>
+          </div>
+          <div class="vra-card-status">
+            <span class="vra-status-chip verified"><span class="vra-chip-dot"></span>✔ Verified</span>
+            <span class="vra-status-chip stamped"><span class="vra-chip-dot"></span>🏛 Stamped</span>
+          </div>
+          <div class="vra-card-actions">
+            <a href="report-mumbai-central.pdf" target="_blank" rel="noopener" class="vra-btn-view" style="background:#00d4ff;">👁 View Report</a>
+            <a href="report-mumbai-central.pdf" download="Report_Mumbai_Central.pdf" class="vra-btn-dl">⬇</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Bandra -->
+      <div class="vra-card" data-vra-delay="120">
+        <div class="vra-card-bar" style="background:linear-gradient(90deg,#00ff9d,#00cc7a);"></div>
+        <div class="vra-card-corner tl" style="border-color:rgba(0,255,157,0.5);"></div>
+        <div class="vra-card-corner br" style="border-color:rgba(0,255,157,0.5);"></div>
+        <div class="vra-card-body">
+          <div class="vra-card-index">02</div>
+          <span class="vra-card-ico">📄</span>
+          <div class="vra-card-station">Bandra</div>
+          <div class="vra-card-loc">📍 Bandra, Mumbai</div>
+          <div class="vra-card-pct" style="color:#00ff9d;text-shadow:0 0 20px rgba(0,255,157,0.6),0 0 40px rgba(0,255,157,0.3);">61.5%</div>
+          <div class="vra-card-pct-label">Energy Saved · 21.0 units/month</div>
+          <div class="vra-energy-track">
+            <div class="vra-energy-fill" style="--fill-pct:61.5%;background:linear-gradient(90deg,#00ff9d,#00d4ff);box-shadow:0 0 12px rgba(0,255,157,.5);"></div>
+          </div>
+          <div class="vra-card-status">
+            <span class="vra-status-chip verified"><span class="vra-chip-dot"></span>✔ Verified</span>
+            <span class="vra-status-chip stamped"><span class="vra-chip-dot"></span>🏛 Stamped</span>
+          </div>
+          <div class="vra-card-actions">
+            <a href="report-bandra.pdf" target="_blank" rel="noopener" class="vra-btn-view" style="background:#00ff9d;">👁 View Report</a>
+            <a href="report-bandra.pdf" download="Report_Bandra.pdf" class="vra-btn-dl">⬇</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Andheri -->
+      <div class="vra-card" data-vra-delay="240">
+        <div class="vra-card-bar" style="background:linear-gradient(90deg,#f7c948,#e0a800);"></div>
+        <div class="vra-card-corner tl" style="border-color:rgba(247,201,72,0.5);"></div>
+        <div class="vra-card-corner br" style="border-color:rgba(247,201,72,0.5);"></div>
+        <div class="vra-card-body">
+          <div class="vra-card-index">03</div>
+          <span class="vra-card-ico">📄</span>
+          <div class="vra-card-station">Andheri</div>
+          <div class="vra-card-loc">📍 Andheri, Mumbai</div>
+          <div class="vra-card-pct" style="color:#f7c948;text-shadow:0 0 20px rgba(247,201,72,0.6),0 0 40px rgba(247,201,72,0.3);">61.4%</div>
+          <div class="vra-card-pct-label">Energy Saved · 29.0 units/month</div>
+          <div class="vra-energy-track">
+            <div class="vra-energy-fill" style="--fill-pct:61.4%;background:linear-gradient(90deg,#f7c948,#ff9f00);box-shadow:0 0 12px rgba(247,201,72,.5);"></div>
+          </div>
+          <div class="vra-card-status">
+            <span class="vra-status-chip verified"><span class="vra-chip-dot"></span>✔ Verified</span>
+            <span class="vra-status-chip stamped"><span class="vra-chip-dot"></span>🏛 Stamped</span>
+          </div>
+          <div class="vra-card-actions">
+            <a href="report-andheri.pdf" target="_blank" rel="noopener" class="vra-btn-view" style="background:#f7c948;">👁 View Report</a>
+            <a href="report-andheri.pdf" download="Report_Andheri.pdf" class="vra-btn-dl">⬇</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Ram Mandir -->
+      <div class="vra-card" data-vra-delay="360">
+        <div class="vra-card-bar" style="background:linear-gradient(90deg,#ff6b35,#cc4400);"></div>
+        <div class="vra-card-corner tl" style="border-color:rgba(255,107,53,0.5);"></div>
+        <div class="vra-card-corner br" style="border-color:rgba(255,107,53,0.5);"></div>
+        <div class="vra-card-body">
+          <div class="vra-card-index">04</div>
+          <span class="vra-card-ico">📄</span>
+          <div class="vra-card-station">Ram Mandir</div>
+          <div class="vra-card-loc">📍 Ram Mandir, Mumbai</div>
+          <div class="vra-card-pct" style="color:#ff6b35;text-shadow:0 0 20px rgba(255,107,53,0.6),0 0 40px rgba(255,107,53,0.3);">71.1%</div>
+          <div class="vra-card-pct-label">Energy Saved · 24.3 units/month</div>
+          <div class="vra-energy-track">
+            <div class="vra-energy-fill" style="--fill-pct:71.1%;background:linear-gradient(90deg,#ff6b35,#f7c948);box-shadow:0 0 12px rgba(255,107,53,.5);"></div>
+          </div>
+          <div class="vra-card-status">
+            <span class="vra-status-chip verified"><span class="vra-chip-dot"></span>✔ Verified</span>
+            <span class="vra-status-chip stamped"><span class="vra-chip-dot"></span>🏛 Stamped</span>
+          </div>
+          <div class="vra-card-actions">
+            <a href="report-ram-mandir.pdf" target="_blank" rel="noopener" class="vra-btn-view" style="background:#ff6b35;">👁 View Report</a>
+            <a href="report-ram-mandir.pdf" download="Report_Ram_Mandir.pdf" class="vra-btn-dl">⬇</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end vra-grid -->
+  </div><!-- end vra-grid-wrap -->
+
+  <!-- ── Bottom verification note ── -->
+  <div class="vra-note">
+    <div class="vra-note-inner">
+      <span class="vra-note-icon">🔒</span>
+      <p class="vra-note-text">All reports contain <strong>real metered energy readings</strong> taken over one month at each station, with <strong>official signatures and authority stamps</strong> from a Senior Section Engineer of Indian Railways, Western Railway Zone — confirming the demonstrated energy savings.</p>
+    </div>
+  </div>
+
+</div><!-- end report-section -->
 
 <!-- APPLICATIONS -->
 <section id="applications" class="sec">
   <div class="wrap">
     <div class="sec-label">Applications</div>
     <h2 class="sec-title">Designed for<br/>high-traffic spaces</h2>
+    <div class="sec-title-ul"></div>
     <div class="app-grid">
       <div class="app-card"><div class="app-ico">🚂</div><div class="app-lbl">Railway Stations</div></div>
       <div class="app-card"><div class="app-ico">🏛️</div><div class="app-lbl">Govt Offices</div></div>
@@ -1087,114 +1768,325 @@ var rb = document.getElementById('roi-box'); if(rb) roiObs.observe(rb);
 var fanEl = document.getElementById('fan-anim');
 setInterval(function(){ fanEl.style.animationDuration = fanEl.style.animationDuration === '0.5s' ? '4s' : '0.5s'; }, 3000);
 
-// ══════════════════════════════════════
-// CHART.JS — Energy Savings Charts
-// ══════════════════════════════════════
-// Station labels — short version for mobile wrapping
-var STATIONS     = ['Mumbai Central', 'Bandra', 'Andheri', 'Ram Mandir'];
-var STATIONS_MOB = ['Mumbai Central', 'Bandra', 'Andheri', 'Ram Mandir'];
+// ══════════════════════════════════════════════════════════════════
+// CHART.JS — Energy Savings Charts  ·  Advanced Mobile-Responsive
+// ══════════════════════════════════════════════════════════════════
 
-// Field data: units consumed per fan per month
-var ORDINARY = [19.1, 34.2, 47.2, 34.2];   // ordinary fan (without device)
-var AI_DEV   = [3.9,  13.2, 18.2, 9.9 ];   // with AI Smart Fan device
-
-// Derived calculations
-var SAVED_U   = ORDINARY.map(function(o,i){ return +(o - AI_DEV[i]).toFixed(1); });
-// [15.2, 21.0, 29.0, 24.3]
-
-var RATE      = 11;  // Rs per unit
-var SAVING_RS = SAVED_U.map(function(u){ return Math.round(u * RATE); });
-// [167, 231, 319, 267]
-
+var STATIONS   = ['Mumbai Central', 'Bandra', 'Andheri', 'Ram Mandir'];
+var ORDINARY   = [19.1, 34.2, 47.2, 34.2];
+var AI_DEV     = [3.9,  13.2, 18.2, 9.9 ];
+var SAVED_U    = ORDINARY.map(function(o,i){ return +(o - AI_DEV[i]).toFixed(1); });
+var RATE       = 11;
+var SAVING_RS  = SAVED_U.map(function(u){ return Math.round(u * RATE); });
 var SAVING_PCT = ORDINARY.map(function(o,i){ return +((SAVED_U[i]/o)*100).toFixed(1); });
-// [79.6, 61.5, 61.4, 71.1]
 
-// ── shared scale config ──
+// ── responsive breakpoint helpers ──
+function isMobile()  { return window.innerWidth < 600; }
+function isTablet()  { return window.innerWidth >= 600 && window.innerWidth < 1024; }
+
+// ── mobile colour palette per station ──
+var STATION_COLORS = ['#00d4ff','#00ff9d','#f7c948','#ff6b35'];
+
+// ─────────────────────────────────────────────────────────────────
+// PLUGIN 1 — Vertical station names INSIDE bars (mobile only)
+//   Draws each station name rotated 90° centred within the tallest
+//   bar of that group, with a subtle frosted-glass backing strip.
+// ─────────────────────────────────────────────────────────────────
+var verticalStationLabelPlugin = {
+  id: 'verticalStationLabels',
+  afterDatasetsDraw: function(chart) {
+    if (!isMobile()) return;
+    var ctx = chart.ctx;
+    var numStations = STATIONS.length;
+    // find the tallest bar per station group for label placement
+    for (var i = 0; i < numStations; i++) {
+      var topY = Infinity, barX = 0, barW = 0, bottomY = 0;
+      chart.data.datasets.forEach(function(ds, di) {
+        var meta = chart.getDatasetMeta(di);
+        if (!meta.hidden && meta.data[i]) {
+          var bar = meta.data[i];
+          var props = bar.getProps(['x','y','width','base'], true);
+          if (props.y < topY) {
+            topY  = props.y;
+            barX  = props.x;
+            barW  = props.width;
+            bottomY = props.base;
+          }
+        }
+      });
+      if (topY === Infinity) continue;
+      var barHeight = bottomY - topY;
+      if (barHeight < 28) continue; // bar too short — skip label
+
+      var label  = STATIONS[i];
+      var clr    = STATION_COLORS[i];
+      var fontSize = Math.min(11, Math.max(9, Math.floor(barW * 0.55)));
+      var centerX  = barX;
+      var centerY  = topY + barHeight / 2;
+
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.rotate(-Math.PI / 2);
+
+      // measure text
+      ctx.font = '700 ' + fontSize + 'px "DM Sans", sans-serif';
+      var tw = ctx.measureText(label).width;
+      var pad = 6;
+
+      // frosted backing pill
+      var pillW = tw + pad * 2;
+      var pillH = fontSize + 6;
+      ctx.beginPath();
+      ctx.roundRect(-pillW/2, -pillH/2, pillW, pillH, pillH/2);
+      ctx.fillStyle = 'rgba(5,10,18,0.52)';
+      ctx.fill();
+
+      // glowing left edge strip
+      ctx.beginPath();
+      ctx.roundRect(-pillW/2, -pillH/2, 3, pillH, [pillH/2, 0, 0, pillH/2]);
+      ctx.fillStyle = clr;
+      ctx.shadowColor = clr;
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // station name text
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, 0, 0);
+
+      ctx.restore();
+    }
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────
+// PLUGIN 2 — Value labels above bars (both desktop & mobile)
+//   On mobile: compact values only (no station name above — it's
+//   already inside the bar). On desktop: full value labels above.
+// ─────────────────────────────────────────────────────────────────
+function makeValueLabelPlugin(dsColors, formatter) {
+  return {
+    id: 'valueLabelPlugin_' + Math.random(),
+    afterDatasetsDraw: function(chart) {
+      var ctx = chart.ctx;
+      var mob = isMobile();
+      chart.data.datasets.forEach(function(dataset, di) {
+        var meta = chart.getDatasetMeta(di);
+        if (meta.hidden) return;
+        ctx.save();
+        meta.data.forEach(function(bar, i) {
+          var props = bar.getProps(['x','y','width'], true);
+          var val   = dataset.data[i];
+          var txt   = formatter ? formatter(val, di, i) : String(val);
+          var clr   = Array.isArray(dsColors) ? dsColors[di] : dsColors;
+          var fs    = mob ? 10 : 11;
+
+          ctx.font = '700 ' + fs + 'px "DM Sans", sans-serif';
+          ctx.fillStyle  = clr;
+          ctx.textAlign  = 'center';
+          ctx.textBaseline = 'bottom';
+          // glow effect
+          ctx.shadowColor = clr;
+          ctx.shadowBlur  = mob ? 4 : 6;
+          ctx.fillText(txt, props.x, props.y - 4);
+          ctx.shadowBlur  = 0;
+        });
+        ctx.restore();
+      });
+    }
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────
+// PLUGIN 3 — Animated scan line that sweeps across on entry
+// ─────────────────────────────────────────────────────────────────
+var scanLinePlugin = {
+  id: 'scanLine',
+  _progress: {},
+  beforeDraw: function(chart) {
+    var id   = chart.id;
+    var prog = this._progress[id];
+    if (prog === undefined || prog >= 1) return;
+    var ctx  = chart.ctx;
+    var area = chart.chartArea;
+    var x    = area.left + (area.right - area.left) * prog;
+    ctx.save();
+    var grad = ctx.createLinearGradient(x - 40, 0, x + 40, 0);
+    grad.addColorStop(0,   'rgba(0,212,255,0)');
+    grad.addColorStop(0.5, 'rgba(0,212,255,0.18)');
+    grad.addColorStop(1,   'rgba(0,212,255,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x - 40, area.top, 80, area.bottom - area.top);
+    ctx.restore();
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────
+// SHARED chart options factory
+// ─────────────────────────────────────────────────────────────────
 function makeOpts(yTitle, isCost, tooltipCbs) {
+  var mob = isMobile();
+  var tab = isTablet();
+
   return {
     responsive: true,
     maintainAspectRatio: false,
-    layout: { padding: { top: 28 } },
-    animation: { duration: 1100, easing: 'easeOutQuart' },
+    layout: { padding: { top: mob ? 20 : 28, left: mob ? 0 : 8, right: mob ? 0 : 8, bottom: 0 } },
+    animation: {
+      duration: 1300,
+      easing: 'easeOutQuart',
+      onProgress: function(anim) {
+        var chart = anim.chart;
+        scanLinePlugin._progress[chart.id] = anim.currentStep / anim.numSteps;
+      },
+      onComplete: function(anim) {
+        scanLinePlugin._progress[anim.chart.id] = 1;
+      }
+    },
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: 'rgba(8,16,30,0.96)',
-        borderColor: 'rgba(0,212,255,0.2)',
-        borderWidth: 1,
-        titleColor: '#e8f4ff',
-        bodyColor: '#6a8caa',
-        padding: 14,
-        titleFont: { family: 'DM Sans', size: 13, weight: '600' },
-        bodyFont: { family: 'DM Sans', size: 13 },
+        backgroundColor : 'rgba(8,16,30,0.96)',
+        borderColor     : 'rgba(0,212,255,0.25)',
+        borderWidth     : 1,
+        titleColor      : '#e8f4ff',
+        bodyColor       : '#6a8caa',
+        padding         : mob ? 10 : 14,
+        caretSize       : 6,
+        cornerRadius    : 8,
+        titleFont: { family: 'DM Sans', size: mob ? 12 : 13, weight: '700' },
+        bodyFont : { family: 'DM Sans', size: mob ? 11 : 13 },
         callbacks: tooltipCbs || {}
       }
     },
     scales: {
       x: {
-        grid: { color: 'rgba(0,212,255,0.04)', drawBorder: false },
-        ticks: {
-          color: '#6a8caa',
-          font: { family: 'DM Sans', size: 11, weight: '600' },
+        grid : { color: 'rgba(0,212,255,0.04)', drawBorder: false },
+        border: { color: 'rgba(0,212,255,0.08)' },
+        ticks: mob ? {
+          // ── MOBILE: hide x-axis tick labels (station names are inside bars)
+          display : false
+        } : {
+          // ── DESKTOP/TABLET: normal horizontal labels
+          color  : '#6a8caa',
+          font   : { family: 'DM Sans', size: tab ? 10 : 11, weight: '600' },
           maxRotation: 0,
-          padding: 6,
-          callback: function(val, idx){ return STATIONS_MOB[idx]; }
-        },
-        border: { color: 'rgba(0,212,255,0.08)' }
+          padding: 6
+        }
       },
       y: {
         beginAtZero: true,
-        grid: { color: 'rgba(0,212,255,0.04)', drawBorder: false },
+        grid : { color: 'rgba(0,212,255,0.04)', drawBorder: false },
+        border: { color: 'rgba(0,212,255,0.08)' },
         ticks: {
-          color: '#6a8caa',
-          font: { family: 'DM Sans', size: 11 },
-          padding: 8,
+          color  : '#6a8caa',
+          font   : { family: 'DM Sans', size: mob ? 10 : 11 },
+          padding: mob ? 4 : 8,
+          maxTicksLimit: mob ? 5 : 8,
           callback: function(v){ return isCost ? '₹' + v : v; }
         },
-        border: { color: 'rgba(0,212,255,0.08)' },
-        title: { display: true, text: yTitle, color: '#6a8caa', font: { family: 'DM Sans', size: 11 } }
+        title: {
+          display : !mob,
+          text    : yTitle,
+          color   : '#6a8caa',
+          font    : { family: 'DM Sans', size: 11 }
+        }
       }
     }
   };
 }
 
+// ─────────────────────────────────────────────────────────────────
+// Dataset factory
+// ─────────────────────────────────────────────────────────────────
 function makeDs(label, data, bg, borderClr) {
   return {
-    label: label, data: data,
-    backgroundColor: bg,
-    borderColor: borderClr,
-    borderWidth: 2,
-    borderRadius: 8,
-    borderSkipped: false,
+    label              : label,
+    data               : data,
+    backgroundColor    : bg,
+    borderColor        : borderClr,
+    borderWidth        : isMobile() ? 1.5 : 2,
+    borderRadius       : isMobile() ? 6 : 8,
+    borderSkipped      : false,
     hoverBackgroundColor: borderClr,
-    hoverBorderWidth: 0
+    hoverBorderWidth   : 0
   };
 }
 
+// ─────────────────────────────────────────────────────────────────
+// Station colour legend strip (mobile only — drawn below chart)
+// ─────────────────────────────────────────────────────────────────
+function buildMobileLegend(containerId) {
+  var wrap = document.getElementById(containerId);
+  if (!wrap) return;
+  // only show on mobile; hide on resize to desktop
+  function render() {
+    var existing = wrap.querySelector('.mob-station-legend');
+    if (existing) existing.remove();
+    if (!isMobile()) return;
+    var div = document.createElement('div');
+    div.className = 'mob-station-legend';
+    div.style.cssText = [
+      'display:grid',
+      'grid-template-columns:1fr 1fr',
+      'gap:8px 16px',
+      'margin-top:16px',
+      'padding:14px 16px',
+      'background:rgba(0,212,255,0.04)',
+      'border:1px solid rgba(0,212,255,0.12)',
+      'border-radius:10px'
+    ].join(';');
+    STATIONS.forEach(function(name, i) {
+      var item = document.createElement('div');
+      item.style.cssText = 'display:flex;align-items:center;gap:8px;';
+      item.innerHTML =
+        '<span style="width:10px;height:10px;border-radius:50%;flex-shrink:0;background:' + STATION_COLORS[i] + ';box-shadow:0 0 6px ' + STATION_COLORS[i] + '40;display:inline-block;"></span>' +
+        '<span style="font-size:11px;font-weight:600;color:#c8dff0;white-space:nowrap;">' + name + '</span>';
+      div.appendChild(item);
+    });
+    wrap.appendChild(div);
+  }
+  render();
+  window.addEventListener('resize', render);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Chart initialisation
+// ─────────────────────────────────────────────────────────────────
 var chartsInited = false;
+var chartInstances = [];
 
 function initCharts() {
   var el1 = document.getElementById('chart-units');
   var el2 = document.getElementById('chart-saving');
-  if(!el1 || !el2 || !window.Chart) return;
+  if (!el1 || !el2 || !window.Chart) return;
 
-  // Gradients for Chart 1
+  // destroy if already built (handles resize/reinit)
+  chartInstances.forEach(function(c){ try{ c.destroy(); }catch(e){} });
+  chartInstances = [];
+
+  var mob = isMobile();
+
+  // ── Chart 1 — Power Consumption ──
   var c1 = el1.getContext('2d');
-  var gOrange = c1.createLinearGradient(0, 0, 0, 340);
-  gOrange.addColorStop(0, 'rgba(255,107,53,0.95)');
-  gOrange.addColorStop(1, 'rgba(255,107,53,0.30)');
-  var gGreen1 = c1.createLinearGradient(0, 0, 0, 340);
-  gGreen1.addColorStop(0, 'rgba(0,255,157,0.95)');
-  gGreen1.addColorStop(1, 'rgba(0,255,157,0.25)');
+  var h1 = mob ? 280 : 360;
 
-  // CHART 1: Ordinary Fan (orange) vs AI Smart Fan (green) — with unit values on top
-  new Chart(c1, {
+  var gOrange = c1.createLinearGradient(0,0,0,h1);
+  gOrange.addColorStop(0,'rgba(255,107,53,0.95)');
+  gOrange.addColorStop(1,'rgba(255,107,53,0.20)');
+  var gGreen1 = c1.createLinearGradient(0,0,0,h1);
+  gGreen1.addColorStop(0,'rgba(0,255,157,0.95)');
+  gGreen1.addColorStop(1,'rgba(0,255,157,0.18)');
+
+  var chart1 = new Chart(c1, {
     type: 'bar',
     data: {
-      labels: STATIONS,
+      labels  : STATIONS,
       datasets: [
-        makeDs('Ordinary Fan (Without Device)', ORDINARY, gOrange,  'rgba(255,107,53,1)'),
-        makeDs('AI Smart Fan (With Device)',    AI_DEV,   gGreen1,  'rgba(0,255,157,1)')
+        makeDs('Ordinary Fan',  ORDINARY, gOrange, 'rgba(255,107,53,1)'),
+        makeDs('AI Smart Fan',  AI_DEV,   gGreen1, 'rgba(0,255,157,1)')
       ]
     },
     options: makeOpts('Units Consumed (per Month)', false, {
@@ -1202,80 +2094,151 @@ function initCharts() {
       label: function(ctx){
         var idx = ctx.dataIndex, v = ctx.parsed.y;
         if(ctx.datasetIndex === 0) return ' Ordinary Fan: ' + v + ' units';
-        return ' AI Smart Fan: ' + v + ' units  (saved ' + SAVED_U[idx] + ')';
+        return ' AI Smart Fan: ' + v + ' units  ✦ saved ' + SAVED_U[idx];
       }
     }),
-    plugins: [{
-      id: 'unitLabels',
-      afterDatasetsDraw: function(chart) {
-        var ctx = chart.ctx;
-        chart.data.datasets.forEach(function(dataset, di) {
-          var meta = chart.getDatasetMeta(di);
-          ctx.save();
-          meta.data.forEach(function(bar, i) {
-            var val = dataset.data[i];
-            ctx.fillStyle = di === 0 ? '#ff8c5a' : '#00ff9d';
-            ctx.font = '700 11px DM Sans';
-            ctx.textAlign = 'center';
-            ctx.fillText(val, bar.x, bar.y - 7);
-          });
-          ctx.restore();
-        });
-      }
-    }]
+    plugins: [
+      scanLinePlugin,
+      verticalStationLabelPlugin,
+      makeValueLabelPlugin(
+        ['#ff8c5a','#00ff9d'],
+        function(val){ return val; }
+      )
+    ]
+  });
+  scanLinePlugin._progress[chart1.id] = 0;
+  chartInstances.push(chart1);
+  setTimeout(function(){ try{ chart1.resize(); }catch(e){} }, 50);
+
+  // ── Chart 2 — Monthly Savings ──
+  var c2 = el2.getContext('2d');
+  var h2 = mob ? 280 : 360;
+
+  var gGreen2 = c2.createLinearGradient(0,0,0,h2);
+  gGreen2.addColorStop(0,'rgba(0,212,255,0.95)');
+  gGreen2.addColorStop(1,'rgba(0,212,255,0.15)');
+
+  // per-bar gradient colours for chart 2 (station-colour bars)
+  var barColors = STATION_COLORS.map(function(clr,i){
+    var g = c2.createLinearGradient(0,0,0,h2);
+    // parse hex to rgba
+    var r = parseInt(clr.slice(1,3),16), gr = parseInt(clr.slice(3,5),16), b = parseInt(clr.slice(5,7),16);
+    g.addColorStop(0,'rgba('+r+','+gr+','+b+',0.95)');
+    g.addColorStop(1,'rgba('+r+','+gr+','+b+',0.15)');
+    return g;
   });
 
-  // Gradient for Chart 2
-  var c2 = el2.getContext('2d');
-  var gGreen2 = c2.createLinearGradient(0, 0, 0, 340);
-  gGreen2.addColorStop(0, 'rgba(0,255,157,0.95)');
-  gGreen2.addColorStop(1, 'rgba(0,255,157,0.25)');
-
-  // CHART 2: Monthly Saving in Rs — with Rs amount on top of each bar
-  new Chart(c2, {
+  var chart2 = new Chart(c2, {
     type: 'bar',
     data: {
-      labels: STATIONS,
-      datasets: [
-        makeDs('Monthly Saving (₹)', SAVING_RS, gGreen2, 'rgba(0,255,157,1)')
-      ]
+      labels  : STATIONS,
+      datasets: [{
+        label              : 'Monthly Saving (₹)',
+        data               : SAVING_RS,
+        backgroundColor    : barColors,
+        borderColor        : STATION_COLORS,
+        borderWidth        : mob ? 1.5 : 2,
+        borderRadius       : mob ? 6 : 8,
+        borderSkipped      : false,
+        hoverBorderWidth   : 0
+      }]
     },
     options: makeOpts('Monthly Saving (₹ per fan)', true, {
       title: function(items){ return STATIONS[items[0].dataIndex]; },
       label: function(ctx){
         var idx = ctx.dataIndex;
         return [
-          ' Monthly Saving: ₹' + SAVING_RS[idx],
-          ' Units Saved: ' + SAVED_U[idx] + ' units',
-          ' Saving %: ' + SAVING_PCT[idx] + '%',
-          ' Tariff: ₹11 per unit'
+          ' Saving: ₹' + SAVING_RS[idx],
+          ' Units Saved: ' + SAVED_U[idx],
+          ' Efficiency: ' + SAVING_PCT[idx] + '%',
+          ' Tariff: ₹11/unit'
         ];
       }
     }),
-    plugins: [{
-      id: 'rsLabels',
-      afterDatasetsDraw: function(chart) {
-        var ctx = chart.ctx;
-        var meta = chart.getDatasetMeta(0);
-        ctx.save();
-        meta.data.forEach(function(bar, i) {
-          ctx.fillStyle = '#f7c948';
-          ctx.font = '700 12px DM Sans';
-          ctx.textAlign = 'center';
-          ctx.fillText('₹' + SAVING_RS[i], bar.x, bar.y - 8);
-        });
-        ctx.restore();
+    plugins: [
+      scanLinePlugin,
+      // For chart2: mobile — vertical station labels inside bars
+      {
+        id: 'verticalStationLabelsC2',
+        afterDatasetsDraw: function(chart) {
+          if (!isMobile()) return;
+          var ctx2 = chart.ctx;
+          var meta = chart.getDatasetMeta(0);
+          STATIONS.forEach(function(name, i) {
+            var bar = meta.data[i];
+            if (!bar) return;
+            var props = bar.getProps(['x','y','width','base'], true);
+            var barHeight = props.base - props.y;
+            if (barHeight < 28) return;
+            var clr     = STATION_COLORS[i];
+            var fontSize = Math.min(11, Math.max(9, Math.floor(props.width * 0.55)));
+            ctx2.save();
+            ctx2.translate(props.x, props.y + barHeight / 2);
+            ctx2.rotate(-Math.PI / 2);
+            ctx2.font = '700 ' + fontSize + 'px "DM Sans", sans-serif';
+            var tw  = ctx2.measureText(name).width;
+            var pad = 6, pillH = fontSize + 6;
+            ctx2.beginPath();
+            ctx2.roundRect(-tw/2 - pad, -pillH/2, tw + pad*2, pillH, pillH/2);
+            ctx2.fillStyle = 'rgba(5,10,18,0.52)';
+            ctx2.fill();
+            ctx2.beginPath();
+            ctx2.roundRect(-tw/2 - pad, -pillH/2, 3, pillH, [pillH/2, 0, 0, pillH/2]);
+            ctx2.fillStyle = clr;
+            ctx2.shadowColor = clr;
+            ctx2.shadowBlur = 8;
+            ctx2.fill();
+            ctx2.shadowBlur = 0;
+            ctx2.fillStyle = '#ffffff';
+            ctx2.textAlign = 'center';
+            ctx2.textBaseline = 'middle';
+            ctx2.fillText(name, 0, 0);
+            ctx2.restore();
+          });
+        }
+      },
+      // value labels (₹ amount above each bar)
+      {
+        id: 'rsLabels',
+        afterDatasetsDraw: function(chart) {
+          var ctx2 = chart.ctx;
+          var meta = chart.getDatasetMeta(0);
+          var mob2 = isMobile();
+          ctx2.save();
+          meta.data.forEach(function(bar, i) {
+            var props = bar.getProps(['x','y'], true);
+            var clr   = STATION_COLORS[i];
+            ctx2.font = '700 ' + (mob2 ? 10 : 12) + 'px "DM Sans", sans-serif';
+            ctx2.fillStyle = clr;
+            ctx2.textAlign = 'center';
+            ctx2.textBaseline = 'bottom';
+            ctx2.shadowColor = clr;
+            ctx2.shadowBlur  = mob2 ? 4 : 6;
+            ctx2.fillText('₹' + SAVING_RS[i], props.x, props.y - 4);
+            ctx2.shadowBlur = 0;
+          });
+          ctx2.restore();
+        }
       }
-    }]
+    ]
   });
+  scanLinePlugin._progress[chart2.id] = 0;
+  chartInstances.push(chart2);
+  setTimeout(function(){ try{ chart2.resize(); }catch(e){} }, 50);
+
+  // build colour legend below charts on mobile
+  buildMobileLegend('chart1-legend-wrap');
+  buildMobileLegend('chart2-legend-wrap');
 }
 
-// Trigger on scroll into view
+// ─────────────────────────────────────────────────────────────────
+// Trigger: scroll into view + rebuild on orientation change
+// ─────────────────────────────────────────────────────────────────
 var chartSec = document.getElementById('charts');
-if(chartSec) {
+if (chartSec) {
   new IntersectionObserver(function(ee) {
     ee.forEach(function(e) {
-      if(e.isIntersecting && !chartsInited){
+      if (e.isIntersecting && !chartsInited) {
         chartsInited = true;
         setTimeout(initCharts, 80);
         this.unobserve(e.target);
@@ -1283,6 +2246,256 @@ if(chartSec) {
     }.bind(this));
   }, { threshold: 0.1 }).observe(chartSec);
 }
+
+// Rebuild on resize crossing mobile/tablet/desktop boundary
+var _lastBP = isMobile() ? 'm' : (isTablet() ? 't' : 'd');
+window.addEventListener('resize', function() {
+  var bp = isMobile() ? 'm' : (isTablet() ? 't' : 'd');
+  if (bp !== _lastBP && chartsInited) {
+    _lastBP = bp;
+    setTimeout(initCharts, 60);
+  }
+});
+
+// ── VRA CARDS — scroll-triggered reveal & energy bars ──
+(function(){
+  var vraCards = document.querySelectorAll('.vra-card');
+  if(!vraCards.length) return;
+
+  var vraObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var card = entry.target;
+        var delay = parseInt(card.dataset.vraDelay || 0);
+        setTimeout(function(){
+          card.classList.add('vra-visible');
+        }, delay);
+        vraObs.unobserve(card);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  vraCards.forEach(function(card){ vraObs.observe(card); });
+
+  // ── Particle burst on card hover ──
+  vraCards.forEach(function(card){
+    card.addEventListener('mouseenter', function(e){
+      var rect = card.getBoundingClientRect();
+      for(var i = 0; i < 6; i++){
+        var p = document.createElement('div');
+        var angle = (i / 6) * Math.PI * 2;
+        var dist  = 40 + Math.random() * 30;
+        p.style.cssText = [
+          'position:fixed',
+          'left:' + (rect.left + rect.width/2) + 'px',
+          'top:'  + (rect.top  + rect.height/2) + 'px',
+          'width:4px', 'height:4px',
+          'border-radius:50%',
+          'background:rgba(0,212,255,0.9)',
+          'pointer-events:none',
+          'z-index:9999',
+          'transition:transform 0.6s ease-out, opacity 0.6s ease-out',
+          'opacity:1',
+          'transform:translate(0,0) scale(1)'
+        ].join(';');
+        document.body.appendChild(p);
+        requestAnimationFrame(function(el, a, d){
+          return function(){
+            el.style.transform = 'translate('+Math.cos(a)*d+'px,'+Math.sin(a)*d+'px) scale(0)';
+            el.style.opacity = '0';
+            setTimeout(function(){ el.remove(); }, 650);
+          };
+        }(p, angle, dist));
+      }
+    });
+  });
+})();
+
+
+
+// ══════════════════════════════════════════════════════════
+// SITE-WIDE SCI-FI ANIMATIONS — GLOBAL INIT
+// ══════════════════════════════════════════════════════════
+
+(function() {
+
+  // ── Universal section reveal observer ──
+  var srObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('sr-show');
+        // trigger heading underline span
+        var ul = e.target.querySelector('.sec-title-ul');
+        if (ul) { setTimeout(function(){ ul.classList.add('ul-show'); }, 300); }
+        srObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  // Mark section wrappers for reveal
+  document.querySelectorAll('.sec > .wrap, .how-bg > .wrap, .specs-bg > .wrap, .rpt-bg > .wrap, .abt-bg > .wrap').forEach(function(el) {
+    el.classList.add('sec-reveal');
+    srObs.observe(el);
+  });
+
+  // ── Pricing cards staggered reveal ──
+  var pcObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        var cards = e.target.querySelectorAll('.price-card');
+        cards.forEach(function(c, i) {
+          setTimeout(function() { c.classList.add('pc-show'); }, i * 120);
+        });
+        pcObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  var pg = document.querySelector('.price-grid');
+  if (pg) pcObs.observe(pg);
+
+  // ── Twinkling data points on particle canvas ──
+  // Upgrade existing particles: every 8th particle becomes a larger "star"
+  // (this is done by patching the existing draw loop — we add a second overlay)
+  var starCanvas = document.createElement('canvas');
+  starCanvas.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.2;';
+  document.body.insertBefore(starCanvas, document.body.firstChild);
+  var sc = starCanvas.getContext('2d');
+  var SW, SH, STARS = [];
+  function rsz2(){ SW = starCanvas.width = innerWidth; SH = starCanvas.height = innerHeight; }
+  rsz2(); window.addEventListener('resize', rsz2);
+  for (var s = 0; s < 40; s++) {
+    STARS.push({
+      x: Math.random() * innerWidth,
+      y: Math.random() * innerHeight,
+      r: Math.random() * 1.5 + 0.5,
+      phase: Math.random() * Math.PI * 2,
+      speed: Math.random() * 0.015 + 0.008,
+      clr: s % 3 === 0 ? '0,255,157' : (s % 3 === 1 ? '247,201,72' : '0,212,255')
+    });
+  }
+  (function drawStars() {
+    sc.clearRect(0, 0, SW, SH);
+    var t = performance.now() * 0.001;
+    STARS.forEach(function(st) {
+      var alpha = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(t * st.speed * 60 + st.phase));
+      sc.beginPath();
+      sc.arc(st.x, st.y, st.r, 0, Math.PI * 2);
+      sc.fillStyle = 'rgba(' + st.clr + ',' + alpha + ')';
+      sc.fill();
+      // cross sparkle
+      if (st.r > 1.2) {
+        sc.save();
+        sc.globalAlpha = alpha * 0.5;
+        sc.strokeStyle = 'rgba(' + st.clr + ',1)';
+        sc.lineWidth = 0.5;
+        sc.beginPath();
+        sc.moveTo(st.x - 4, st.y); sc.lineTo(st.x + 4, st.y);
+        sc.moveTo(st.x, st.y - 4); sc.lineTo(st.x, st.y + 4);
+        sc.stroke();
+        sc.restore();
+      }
+    });
+    requestAnimationFrame(drawStars);
+  })();
+
+  // ── Data stream text effect on section labels ──
+  // Each .sec-label gets a brief glitch/scramble on first view
+  var chars = '0123456789ABCDEF⚡∆∑∫⊕';
+  function glitchLabel(el) {
+    var orig = el.textContent;
+    var iter = 0, total = 10;
+    var iv = setInterval(function() {
+      if (iter >= total) { el.textContent = orig; clearInterval(iv); return; }
+      el.textContent = orig.split('').map(function(c, i) {
+        return i < iter ? orig[i] : (c === ' ' ? ' ' : chars[Math.floor(Math.random() * chars.length)]);
+      }).join('');
+      iter++;
+    }, 40);
+  }
+  var lblObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { glitchLabel(e.target); lblObs.unobserve(e.target); }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.sec-label').forEach(function(el) { lblObs.observe(el); });
+
+  // ── Mouse parallax tilt on vra-cards and feat-cards ──
+  function addTilt(selector, maxDeg) {
+    document.querySelectorAll(selector).forEach(function(card) {
+      card.addEventListener('mousemove', function(e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5;
+        var y = (e.clientY - r.top)  / r.height - 0.5;
+        card.style.transform = 'perspective(600px) rotateY(' + (x * maxDeg * 2) + 'deg) rotateX(' + (-y * maxDeg) + 'deg) translateY(-6px)';
+      });
+      card.addEventListener('mouseleave', function() {
+        card.style.transform = '';
+      });
+    });
+  }
+  addTilt('.feat-card', 6);
+  addTilt('.vra-card.vra-visible', 4);
+  addTilt('.price-card', 4);
+
+  // ── Ripple effect on all .btn-p, .btn-s, .vra-btn-view, .price-cta clicks ──
+  function addRipple(sel) {
+    document.querySelectorAll(sel).forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        var r = btn.getBoundingClientRect();
+        var rip = document.createElement('span');
+        var size = Math.max(r.width, r.height) * 2;
+        rip.style.cssText = [
+          'position:absolute',
+          'left:' + (e.clientX - r.left - size/2) + 'px',
+          'top:'  + (e.clientY - r.top  - size/2) + 'px',
+          'width:' + size + 'px', 'height:' + size + 'px',
+          'border-radius:50%',
+          'background:rgba(255,255,255,0.18)',
+          'transform:scale(0)',
+          'animation:rippleAnim .55s ease-out forwards',
+          'pointer-events:none'
+        ].join(';');
+        btn.style.position = 'relative';
+        btn.style.overflow = 'hidden';
+        btn.appendChild(rip);
+        setTimeout(function(){ rip.remove(); }, 600);
+      });
+    });
+  }
+  // Inject ripple keyframe once
+  var ripStyle = document.createElement('style');
+  ripStyle.textContent = '@keyframes rippleAnim { to { transform:scale(1); opacity:0; } }';
+  document.head.appendChild(ripStyle);
+  addRipple('.btn-p, .btn-s, .vra-btn-view, .price-cta, .btn-p, .clink');
+
+  // ── Glowing data readout on stat-num hover ──
+  document.querySelectorAll('.stat-item').forEach(function(item) {
+    item.addEventListener('mouseenter', function() {
+      var num = item.querySelector('.stat-num');
+      if (num) { num.style.textShadow = '0 0 30px rgba(0,212,255,0.8)'; }
+    });
+    item.addEventListener('mouseleave', function() {
+      var num = item.querySelector('.stat-num');
+      if (num) { num.style.textShadow = ''; }
+    });
+  });
+
+  // ── Cyberpunk HUD line sweep on chart wrapper entry ──
+  var chartDivs = document.querySelectorAll('#charts > .wrap > div[style*="border-radius:16px"]');
+  var chartHudObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.animation = 'hudEntry .6s cubic-bezier(.16,1,.3,1) both';
+        chartHudObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  chartDivs.forEach(function(d) { chartHudObs.observe(d); });
+  var hudStyle = document.createElement('style');
+  hudStyle.textContent = '@keyframes hudEntry { from{opacity:0;transform:scaleY(.92);filter:brightness(0.4)} to{opacity:1;transform:scaleY(1);filter:brightness(1)} }';
+  document.head.appendChild(hudStyle);
+
+})();
 
 // ── REPORT TABS ──
 function doTab(id, btn) {
