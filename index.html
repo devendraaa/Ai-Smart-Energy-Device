@@ -367,7 +367,7 @@
      Holographic foil + electric scan + letter-glow
   ════════════════════════════════════════════════ */
   .abt-name-wrap {
-    position: relative; display: inline-block; margin-bottom: 10px; overflow: hidden;
+    position: relative; display: block; margin-bottom: 10px; overflow: hidden;
   }
   /* Outer glow halo that pulses */
   .abt-name-wrap::before {
@@ -959,8 +959,8 @@
   /* ── Chart card wrappers ── */
   .chart-card {
     background: var(--bg); border: 1px solid var(--border);
-    border-radius: 16px; padding: 36px 32px 32px;
-    position: relative; margin-bottom: 32px;
+    border-radius: 16px; padding: 24px 24px 20px;
+    position: relative; margin-bottom: 24px;
   }
   @media(max-width:768px){
     .chart-card { padding: 20px 14px 20px !important; border-radius: 12px !important; margin-bottom: 16px !important; }
@@ -997,7 +997,7 @@
 
     /* CHART SECTION */
     #charts { padding: 56px 16px !important; }
-    #charts canvas { height: 240px !important; }
+    #charts canvas { height: 260px !important; }
 
     /* FULL REPORT (tabs section) */
     .rpt-bg { padding: 56px 16px !important; }
@@ -1228,34 +1228,27 @@
   ══════════════════════════════════════════════════ */
 
   /* ── 1. Hero floating patent badge (top-right corner) ── */
-  .patent-hero-badge {
-    position: absolute; top: 88px; right: 32px;
-    display: flex; flex-direction: column; align-items: center;
-    gap: 0; z-index: 3;
-    animation: fadeUp 1s 0.6s ease both;
+  /* ── Hero patent rectangle tag ── */
+  .patent-rect {
+    display: inline-flex; align-items: center; gap: 9px;
+    border: 1px solid rgba(247,201,72,0.55);
+    border-radius: 5px; padding: 7px 18px;
+    font-family: 'Orbitron', monospace; font-size: 8px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--accent3);
+    position: relative;
+    box-shadow: 0 0 16px rgba(247,201,72,0.15), inset 0 0 14px rgba(247,201,72,0.04);
+    animation: fadeUp 1s 0.55s ease both;
   }
-  @media(max-width:768px){ .patent-hero-badge { top: 76px; right: 14px; } }
-
-  .patent-hex {
-    width: 72px; height: 82px; position: relative;
-    display: flex; align-items: center; justify-content: center;
-    cursor: default;
+  @keyframes rectGlow {
+    0%,100%{ box-shadow: 0 0 10px rgba(247,201,72,0.15), inset 0 0 10px rgba(247,201,72,0.04); }
+    50%    { box-shadow: 0 0 22px rgba(247,201,72,0.35), inset 0 0 18px rgba(247,201,72,0.08); }
   }
-  .patent-hex svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .patent-hex-inner {
-    position: relative; z-index: 1; text-align: center;
+  .patent-rect { animation: fadeUp 1s 0.55s ease both, rectGlow 2.8s ease-in-out 1.6s infinite; }
+  .patent-rect-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent3); flex-shrink: 0;
+    animation: pulse 2s ease infinite;
   }
-  .patent-hex-icon { font-size: 18px; display: block; margin-bottom: 1px; }
-  .patent-hex-text {
-    font-family: 'Orbitron', monospace; font-size: 5.5px; font-weight: 900;
-    letter-spacing: 1.5px; text-transform: uppercase; color: #fff;
-    line-height: 1.3; white-space: nowrap;
-  }
-  @keyframes hexPulse {
-    0%,100%{ filter: drop-shadow(0 0 6px rgba(247,201,72,0.5)); }
-    50%    { filter: drop-shadow(0 0 18px rgba(247,201,72,0.9)); }
-  }
-  .patent-hex { animation: hexPulse 2.5s ease-in-out infinite; }
 
   /* ── 2. Inline patent pill (used in pricing card) ── */
   .patent-pill {
@@ -1363,28 +1356,16 @@
 <section class="hero">
   <div class="hero-ring"></div><div class="hero-ring"></div><div class="hero-ring"></div>
 
-  <!-- Floating Patent Badge — top right -->
-  <div class="patent-hero-badge">
-    <div class="patent-hex">
-      <!-- Hexagon SVG -->
-      <svg viewBox="0 0 80 92" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M40 2 L76 22 L76 70 L40 90 L4 70 L4 22 Z"
-          fill="rgba(247,201,72,0.10)"
-          stroke="rgba(247,201,72,0.7)" stroke-width="1.5"/>
-        <path d="M40 10 L70 27 L70 65 L40 82 L10 65 L10 27 Z"
-          fill="none"
-          stroke="rgba(247,201,72,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
-      </svg>
-      <div class="patent-hex-inner">
-        <span class="patent-hex-icon">⚙️</span>
-        <div class="patent-hex-text">PATENTED<br/>PRODUCT</div>
-      </div>
-    </div>
-  </div>
-
   <div class="hero-content">
     <div class="hero-badge">AI-Powered Energy Automation</div>
     <h1>Smart Fan <span class="hl">Energy<br/>Saving</span> Device</h1>
+    <!-- Patent rectangle tag — below the h1 title -->
+    <div style="display:flex;justify-content:center;margin-bottom:20px;">
+      <div class="patent-rect">
+        <span class="patent-rect-dot"></span>
+        ⚙ Patented Product
+      </div>
+    </div>
     <p class="hero-sub"><em>AI-based</em> ceiling fan controller — cutting electricity waste by up to 79%<br/>across Mumbai's busiest railway stations</p>
     <div class="hero-ctas">
       <a href="#features" class="btn-p">Explore Features</a>
@@ -1484,7 +1465,7 @@
           <div style="font-family:'Rajdhani',sans-serif;font-size:clamp(18px,2.5vw,24px);font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);">Ordinary Fan vs AI Smart Fan <span style="font-size:13px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:'DM Sans',sans-serif;">(units consumed / month)</span></div>
         </div>
       </div>
-      <div style="position:relative;width:100%;height:360px;min-height:260px;">
+      <div style="position:relative;width:100%;height:420px;min-height:300px;">
         <canvas id="chart-units" style="display:block;width:100%;"></canvas>
       </div>
       <div id="chart1-legend-wrap">
@@ -1504,7 +1485,7 @@
           <div style="font-family:'Rajdhani',sans-serif;font-size:clamp(18px,2.5vw,24px);font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);">Total Monthly Cost Saving per Station <span style="font-size:13px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:'DM Sans',sans-serif;">(units saved × ₹11)</span></div>
         </div>
       </div>
-      <div style="position:relative;width:100%;height:360px;min-height:260px;">
+      <div style="position:relative;width:100%;height:420px;min-height:300px;">
         <canvas id="chart-saving" style="display:block;width:100%;"></canvas>
       </div>
       <div id="chart2-legend-wrap">
@@ -2048,35 +2029,21 @@
   <div class="wrap abt-grid">
     <div>
       <!-- Avatar with orbital ring -->
-      <div style="position:relative;display:inline-block;margin-bottom:28px;">
+      <div style="position:relative;display:block;width:fit-content;margin-bottom:20px;">
         <div class="abt-av" style="margin-bottom:0;">DC</div>
-        <!-- orbital dot ring -->
         <div style="position:absolute;inset:-14px;border-radius:50%;border:1px dashed rgba(0,212,255,0.22);animation:spinRing 12s linear infinite;"></div>
         <div style="position:absolute;inset:-26px;border-radius:50%;border:1px dashed rgba(0,255,157,0.12);animation:spinRing 22s linear infinite reverse;"></div>
       </div>
 
-      <!-- Micro identity tag above name -->
-      <div class="abt-name-tag">
-        <span class="abt-tag-dot"></span>
-        VERIFIED IDENTITY · AI INNOVATOR
-        <span class="abt-tag-dot"></span>
-      </div>
-
-      <!-- Name with holographic wrap -->
-      <div class="abt-name-wrap">
+      <!-- Name — directly below DC avatar -->
+      <div class="abt-name-wrap" style="display:block;">
         <div class="abt-name-scan"></div>
         <span class="abt-name">Devendra Umesh Chavan</span>
       </div>
 
-      <!-- Data line: role chips -->
-      <div class="abt-name-data">
-        <span class="abt-name-data-item">AI Engineer</span>
-        <span class="abt-name-data-item">Innovator</span>
-        <span class="abt-name-data-item">Mumbai, India</span>
-      </div>
-
-      <div class="abt-role" style="margin-top:14px;">AI Engineer &amp; Innovator</div>
-      <div class="abt-org">
+      <!-- Role & Org -->
+      <div class="abt-role" style="margin-top:8px;">AI Engineer &amp; Innovator</div>
+      <div class="abt-org" style="margin-bottom:16px;">
         <div class="founder-wrap" id="founder-wrap">
           <span class="founder-prefix">⚡ Founder</span>
           <span class="founder-company">Saavo Avinya</span>
@@ -2084,18 +2051,32 @@
           <span class="founder-cursor"></span>
         </div>
       </div>
-      <!-- Patent Seal -->
-      <div class="patent-seal">
-        <div class="patent-seal-ring">⚙️</div>
-        <div class="patent-seal-body">
-          <div class="patent-seal-label">🏛 Intellectual Property</div>
-          <div class="patent-seal-title">Patented Product</div>
-          <div class="patent-seal-sub">AI Smart Fan Energy Saving Device<br/>Patent Protected · India</div>
-        </div>
+
+      <!-- Patent tag -->
+      <div class="patent-rect" style="margin-bottom:24px;">
+        <span class="patent-rect-dot"></span>
+        ⚙ Patented Product · India
       </div>
 
+      <!-- Description -->
       <p class="abt-text">Passionate about applying artificial intelligence to solve real-world energy challenges in India's public infrastructure. This device is a practical, deployable AI solution to one of the most overlooked sources of electricity waste.</p>
       <a href="/cdn-cgi/l/email-protection#f3979685969d978192909b9285929dc0c2b3949e929a9fdd909c9e" class="clink">✉ &nbsp;<span class="__cf_email__" data-cfemail="0b6f6e7d6e656f796a68636a7d6a65383a4b6c666a626725686466">[email&#160;protected]</span></a>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;">
+        <a href="https://wa.me/919324619302" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:9px;background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.35);border-radius:4px;padding:12px 20px;text-decoration:none;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#25d366;transition:all .3s;"
+          onmouseover="this.style.background='rgba(37,211,102,0.16)';this.style.boxShadow='0 0 18px rgba(37,211,102,0.2)'"
+          onmouseout="this.style.background='rgba(37,211,102,0.08)';this.style.boxShadow='none'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          +91 93246 19302
+        </a>
+        <a href="https://wa.me/918691809607" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:9px;background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.35);border-radius:4px;padding:12px 20px;text-decoration:none;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#25d366;transition:all .3s;"
+          onmouseover="this.style.background='rgba(37,211,102,0.16)';this.style.boxShadow='0 0 18px rgba(37,211,102,0.2)'"
+          onmouseout="this.style.background='rgba(37,211,102,0.08)';this.style.boxShadow='none'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          +91 86918 09607
+        </a>
+      </div>
     </div>
     <div class="abt-stats">
       <div class="abt-stat"><div class="abt-n">4+</div><div class="abt-l">Stations Deployed</div></div>
@@ -2393,7 +2374,7 @@ function makeOpts(yTitle, isCost, tooltipCbs) {
   return {
     responsive: true,
     maintainAspectRatio: false,
-    layout: { padding: { top: mob ? 20 : 28, left: mob ? 0 : 8, right: mob ? 0 : 8, bottom: 0 } },
+    layout: { padding: { top: mob ? 14 : 18, left: mob ? 0 : 8, right: mob ? 0 : 8, bottom: 0 } },
     animation: {
       duration: 1300,
       easing: 'easeOutQuart',
@@ -2531,7 +2512,7 @@ function initCharts() {
 
   // ── Chart 1 — Power Consumption ──
   var c1 = el1.getContext('2d');
-  var h1 = mob ? 280 : 360;
+  var h1 = mob ? 280 : 420;
 
   var gOrange = c1.createLinearGradient(0,0,0,h1);
   gOrange.addColorStop(0,'rgba(255,107,53,0.95)');
@@ -2572,7 +2553,7 @@ function initCharts() {
 
   // ── Chart 2 — Monthly Savings ──
   var c2 = el2.getContext('2d');
-  var h2 = mob ? 280 : 360;
+  var h2 = mob ? 280 : 420;
 
   var gGreen2 = c2.createLinearGradient(0,0,0,h2);
   gGreen2.addColorStop(0,'rgba(0,212,255,0.95)');
