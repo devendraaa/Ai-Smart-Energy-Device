@@ -22,7 +22,7 @@
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
   #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.35; }
 
   /* ── NAV ── */
@@ -971,22 +971,119 @@
 
   /* ── RESPONSIVE ── */
   @media(max-width:768px) {
+    /* NAV */
     nav { padding: 14px 20px !important; }
     .nav-links { display: none !important; }
     .ham { display: flex !important; }
-    .sec { padding: 72px 20px; }
-    footer { padding: 28px 20px; }
-    .hero { padding: 100px 20px 60px; }
-    .stats-strip .stat-item { padding: 32px 20px; }
-    .how-grid, .specs-grid, .abt-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
-    .tabs { gap: 0; }
-    .tbtn { padding: 12px 14px; font-size: 8px; }
-    #charts > div, #company > div, #original-report > div,
-    .rpt-bg > .wrap, .specs-bg > .wrap { padding: 72px 20px !important; }
-    #pricing > .wrap { padding: 72px 20px !important; }
+
+    /* BASE SECTION PADDING — full width on mobile */
+    .sec { padding: 56px 16px !important; }
+    footer { padding: 28px 16px; }
+    .hero { padding: 100px 16px 60px; }
+
+    /* STATS */
+    .stats-strip .stat-item { padding: 28px 16px; }
+
+    /* GRIDS — all single column */
+    .how-grid, .specs-grid, .abt-grid {
+      grid-template-columns: 1fr !important; gap: 40px !important;
+    }
+    .feat-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+    .res-grid  { grid-template-columns: 1fr !important; gap: 14px !important; }
+    .app-grid  { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+    .price-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+    .vra-grid  { grid-template-columns: 1fr !important; gap: 14px !important; }
+    .impact-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+    .abt-stats { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+
+    /* TABS */
+    .tabs { gap: 0; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tbtn { padding: 12px 12px; font-size: 8px; white-space: nowrap; flex-shrink: 0; }
+
+    /* CHART SECTION — remove hardcoded padding from inline wrappers */
+    #charts { padding: 56px 16px !important; }
+    #charts .wrap { padding: 0 !important; }
+    #charts .wrap > div[style] {
+      padding: 20px 14px 20px !important;
+      margin-bottom: 20px !important;
+      border-radius: 12px !important;
+    }
+    #charts canvas { height: 260px !important; }
+
+    /* FULL REPORT (tabs section) */
+    .rpt-bg { padding: 56px 16px !important; }
+    .rpt-bg .wrap { padding: 0 !important; }
+
+    /* SPECS + ROI — full width, stack */
+    .specs-bg { padding: 56px 16px !important; }
+    .specs-bg .wrap { padding: 0 !important; }
+    .stbl { margin-top: 28px; }
+    .stbl td { padding: 14px 0; font-size: 13px; }
+    .roi-box { padding: 24px 18px; margin-top: 28px; }
+    .roi-lbls { font-size: 9px; }
+    .roi-mark { font-size: 8px; padding: 3px 7px; }
+
+    /* PRICING — full width */
+    #pricing { padding: 56px 16px !important; }
+    #pricing .wrap { padding: 0 !important; }
+    .price-card { padding: 28px 20px !important; }
+    .price-amount { font-size: 36px !important; }
+
+    /* COMPANY DETAILS */
+    #company > div { padding: 56px 16px !important; }
+
+    /* VERIFIED REPORT section */
+    .vra-hero { padding: 56px 16px 0 !important; }
+    .vra-authority { padding: 0 16px !important; margin-bottom: 40px !important; }
+    .vra-grid-wrap { padding: 0 16px 56px !important; }
+    .vra-auth-card { padding: 24px 20px !important; gap: 16px !important; }
+    .vra-note { padding: 0 16px !important; }
+    .vra-note-inner { margin-bottom: 40px !important; }
+    .vra-card-body { padding: 20px 18px !important; }
+    .vra-card-pct { font-size: 32px !important; }
+
+    /* APPLICATIONS */
+    #applications { padding: 56px 16px !important; }
+
+    /* ABOUT / CONTACT */
+    #contact { padding: 56px 16px !important; }
+    .abt-av { width: 80px !important; height: 80px !important; font-size: 22px !important; }
+
+    /* FOOTER */
+    footer { flex-direction: column; text-align: center; gap: 10px; }
+
+    /* REP GRID (old) */
     .rep-grid { grid-template-columns: 1fr !important; }
-    .price-grid { grid-template-columns: 1fr !important; }
     .rep-actions { flex-wrap: wrap; }
+
+    /* VRA RIBBON — wrap on small screens */
+    .vra-ribbon { font-size: 7px !important; letter-spacing: 1.5px !important; padding: 7px 12px !important; text-align: center; flex-wrap: wrap; }
+
+    /* FOUNDER LINE — fit on small screen */
+    .founder-wrap { padding: 8px 12px !important; flex-wrap: wrap; gap: 6px; }
+    .founder-company { font-size: 11px !important; }
+    .founder-prefix { font-size: 7px !important; }
+
+    /* PRICE FEATURES LIST */
+    .price-features li { font-size: 13px; }
+    .price-badge { font-size: 7px !important; }
+    .price-name { font-size: 18px !important; }
+
+    /* SECTION TITLES */
+    .sec-title { letter-spacing: 1px !important; }
+    .sec-desc { font-size: 14px !important; }
+  }
+
+
+  @media(max-width:768px){
+    .price-card { opacity: 1 !important; transform: none !important; }
+  }
+  /* Extra small phones */
+  @media(max-width:400px) {
+    .app-grid  { grid-template-columns: 1fr !important; }
+    .impact-grid { grid-template-columns: 1fr !important; }
+    .abt-stats { grid-template-columns: 1fr !important; }
+    .vra-ribbon { font-size: 6.5px !important; }
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -1078,14 +1175,9 @@
   }
   .app-card:hover::after { opacity: 1; }
 
-  /* ── ROI box — animated border glow on appear ── */
+  /* ── ROI box — just transition, no auto-playing opacity animation ── */
   .roi-box {
     transition: box-shadow .5s;
-    animation: roiBoxAppear .8s cubic-bezier(.16,1,.3,1) both;
-  }
-  @keyframes roiBoxAppear {
-    from { opacity:0; transform:translateX(20px); }
-    to   { opacity:1; transform:translateX(0); }
   }
 
   /* ── Specs table row — neon left flash on hover ── */
@@ -1122,32 +1214,15 @@
   /* sec-label cursor removed - interferes with glitch JS effect */
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  /* ── Data table rows — stagger fade in ── */
-  .tbl tbody tr {
-    opacity: 0; transform: translateX(-10px);
-    transition: background .2s;
-    animation: tblRowIn .4s ease forwards;
-  }
-  .tbl tbody tr:nth-child(1){ animation-delay:.05s }
-  .tbl tbody tr:nth-child(2){ animation-delay:.12s }
-  .tbl tbody tr:nth-child(3){ animation-delay:.19s }
-  .tbl tbody tr:nth-child(4){ animation-delay:.26s }
-  @keyframes tblRowIn { to { opacity:1; transform:translateX(0); } }
+  /* ── Data table rows — hover highlight only ── */
+  .tbl tbody tr { transition: background .2s; }
 
-  /* ── Impact cards — scale-in ── */
-  .imp-card {
-    opacity: 0; transform: scale(.9);
-    animation: impIn .5s cubic-bezier(.34,1.56,.64,1) forwards;
-  }
-  .imp-card:nth-child(1){ animation-delay:.1s }
-  .imp-card:nth-child(2){ animation-delay:.2s }
-  .imp-card:nth-child(3){ animation-delay:.3s }
-  .imp-card:nth-child(4){ animation-delay:.4s }
-  @keyframes impIn { to { opacity:1; transform:scale(1); } }
+  /* ── Impact cards — hover only, no auto opacity:0 ── */
+  .imp-card { transition: border-color .3s, transform .3s; }
+  .imp-card:hover { transform: translateY(-3px); }
 
-  /* ── Section entry reveal ── */
+  /* ── Section entry reveal — NO opacity:0 on wraps (causes scroll jump) ── */
   .sec-reveal {
-    opacity: 0; transform: translateY(20px);
     transition: opacity .7s ease, transform .7s ease;
   }
   .sec-reveal.sr-show { opacity: 1; transform: translateY(0); }
@@ -1167,17 +1242,19 @@
   .sr-show .sec-title-ul,
   .sec-title-ul.ul-show { width: 100%; }
 
-  /* ── Vis-box — rotating border gradient ── */
-  .vis-box {
-    background-image: linear-gradient(var(--bg), var(--bg)),
-      conic-gradient(from 0deg, var(--accent), var(--accent2), var(--accent3), var(--accent));
-    background-origin: border-box;
-    border: 1.5px solid transparent;
-    background-clip: padding-box, border-box;
-    animation: conicSpin 6s linear infinite;
-  }
-  @keyframes conicSpin {
-    to { filter: hue-rotate(360deg); }
+  /* ── Vis-box — rotating border gradient (desktop only) ── */
+  @media(min-width:769px){
+    .vis-box {
+      background-image: linear-gradient(var(--bg), var(--bg)),
+        conic-gradient(from 0deg, var(--accent), var(--accent2), var(--accent3), var(--accent));
+      background-origin: border-box;
+      border: 1.5px solid transparent;
+      background-clip: padding-box, border-box;
+      animation: conicSpin 6s linear infinite;
+    }
+    @keyframes conicSpin {
+      to { filter: hue-rotate(360deg); }
+    }
   }
 
 </style>
@@ -2557,11 +2634,10 @@ window.addEventListener('resize', function() {
 
 (function() {
 
-  // ── Universal section reveal observer ──
+  // ── Universal section observer — triggers underline + glitch only, NO opacity hide ──
   var srObs = new IntersectionObserver(function(entries) {
     entries.forEach(function(e) {
       if (e.isIntersecting) {
-        e.target.classList.add('sr-show');
         // trigger heading underline span
         var ul = e.target.querySelector('.sec-title-ul');
         if (ul) { setTimeout(function(){ ul.classList.add('ul-show'); }, 300); }
@@ -2570,9 +2646,8 @@ window.addEventListener('resize', function() {
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-  // Mark section wrappers for reveal
+  // Observe section wrappers (NO sec-reveal class added — prevents scroll jump)
   document.querySelectorAll('.sec > .wrap, .how-bg > .wrap, .specs-bg > .wrap, .rpt-bg > .wrap, .abt-bg > .wrap').forEach(function(el) {
-    el.classList.add('sec-reveal');
     srObs.observe(el);
   });
 
@@ -2594,6 +2669,7 @@ window.addEventListener('resize', function() {
   // ── Twinkling data points on particle canvas ──
   // Upgrade existing particles: every 8th particle becomes a larger "star"
   // (this is done by patching the existing draw loop — we add a second overlay)
+  if ('ontouchstart' in window) {} else {
   var starCanvas = document.createElement('canvas');
   starCanvas.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.2;';
   document.body.insertBefore(starCanvas, document.body.firstChild);
@@ -2635,6 +2711,7 @@ window.addEventListener('resize', function() {
     });
     requestAnimationFrame(drawStars);
   })();
+  } // end desktop-only star canvas
 
   // ── Data stream text effect on section labels ──
   // Each .sec-label gets a brief glitch/scramble on first view
@@ -2657,8 +2734,9 @@ window.addEventListener('resize', function() {
   }, { threshold: 0.5 });
   document.querySelectorAll('.sec-label').forEach(function(el) { lblObs.observe(el); });
 
-  // ── Mouse parallax tilt on vra-cards and feat-cards ──
+  // ── Mouse parallax tilt — desktop only (touch would block scrolling) ──
   function addTilt(selector, maxDeg) {
+    if ('ontouchstart' in window) return; // skip on touch devices
     document.querySelectorAll(selector).forEach(function(card) {
       card.addEventListener('mousemove', function(e) {
         var r = card.getBoundingClientRect();
