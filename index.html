@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <title>AI Smart Fan — Energy Saving Device</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
@@ -22,7 +22,11 @@
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-overflow-scrolling: touch; touch-action: pan-y; -ms-touch-action: pan-y; }
+  /* Prevent double-tap zoom on all interactive elements */
+  a, button, input, select, textarea, [role="button"] { touch-action: manipulation; }
+  /* Prevent text size inflation on orientation change */
+  html { -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; }
   #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.35; }
 
   /* ── NAV ── */
@@ -106,15 +110,15 @@
   .hero-sub em { color: var(--accent2); font-style: italic; font-weight: 500; }
   .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.8s 0.45s ease both; }
   .btn-p { background: var(--accent); color: #050a12; font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; padding: 16px 36px; border-radius: 3px; text-decoration: none; letter-spacing: 1.5px; text-transform: uppercase; transition: all 0.3s; box-shadow: 0 0 30px rgba(0,212,255,0.3); position: relative; overflow: hidden; }
-  .btn-p::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent); transition: left .5s; }
-  .btn-p:hover::after { left: 100%; }
+  .btn-p::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent); transition: transform .5s; transform: translateX(-100%); }
+  .btn-p:hover::after { transform: translateX(100%); }
   .btn-p:hover { box-shadow: 0 0 55px rgba(0,212,255,.55); transform: translateY(-2px); }
   .btn-s { background: transparent; color: var(--text); font-size: 13px; font-weight: 500; padding: 16px 36px; border-radius: 3px; border: 1px solid var(--border); text-decoration: none; transition: all 0.3s; }
   .btn-s:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,.05); }
   @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
 
   /* ── STATS ── */
-  .stats-strip { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 1px; background: var(--border); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .stats-strip { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 1px; background: var(--border); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); overflow: hidden; }
   .stat-item { background: var(--bg); padding: 44px 36px; text-align: center; transition: background .3s; }
   .stat-item:hover { background: var(--surface); }
   .stat-num { font-family: 'Orbitron', monospace; font-size: clamp(32px,4.5vw,56px); font-weight: 900; line-height: 1; background: linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
@@ -335,7 +339,7 @@
      Holographic foil + electric scan + letter-glow
   ════════════════════════════════════════════════ */
   .abt-name-wrap {
-    position: relative; display: inline-block; margin-bottom: 10px;
+    position: relative; display: inline-block; margin-bottom: 10px; overflow: hidden;
   }
   /* Outer glow halo that pulses */
   .abt-name-wrap::before {
@@ -394,7 +398,7 @@
 
   /* Electric scan line that sweeps across the name */
   .abt-name-scan {
-    position: absolute; top: 0; left: -20%; width: 40%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 40%; height: 100%;
     background: linear-gradient(90deg,
       transparent 0%,
       rgba(255,255,255,0.18) 40%,
@@ -405,12 +409,13 @@
     pointer-events: none; z-index: 2;
     animation: nameScanSweep 2.8s ease-in-out infinite;
     border-radius: 4px;
+    transform: translateX(-200%);
   }
   @keyframes nameScanSweep {
-    0%   { left: -40%; opacity: 0; }
+    0%   { transform: translateX(-200%); opacity: 0; }
     10%  { opacity: 1; }
     90%  { opacity: 1; }
-    100% { left: 120%; opacity: 0; }
+    100% { transform: translateX(300%); opacity: 0; }
   }
 
   /* "VERIFIED IDENTITY" micro-tag above name */
@@ -426,11 +431,12 @@
   }
   .abt-name-tag::before {
     content: '';
-    position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(90deg,transparent,rgba(0,255,157,.15),transparent);
     animation: tagSheen 2.2s ease-in-out infinite 0.8s;
+    transform: translateX(-200%);
   }
-  @keyframes tagSheen { to { left: 200%; } }
+  @keyframes tagSheen { 0%{transform:translateX(-200%)} 100%{transform:translateX(400%)} }
   .abt-tag-dot {
     width: 5px; height: 5px; border-radius: 50%;
     background: var(--accent2);
@@ -478,11 +484,12 @@
   /* Subtle scan shimmer across the whole bar */
   .founder-wrap::after {
     content: '';
-    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 60%; height: 100%;
     background: linear-gradient(90deg, transparent, rgba(0,212,255,0.07), transparent);
     animation: founderScan 4s ease-in-out infinite;
+    transform: translateX(-200%);
   }
-  @keyframes founderScan { 0%{left:-60%} 100%{left:110%} }
+  @keyframes founderScan { 0%{transform:translateX(-200%)} 100%{transform:translateX(300%)} }
 
   /* Prefix label */
   .founder-prefix {
@@ -616,12 +623,13 @@
 
   /* Scanning beam over the whole section */
   .vra-scan-beam {
-    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 60%; height: 100%;
     background: linear-gradient(90deg, transparent, rgba(0,212,255,0.04), transparent);
     animation: beamSweep 5s ease-in-out infinite;
     pointer-events: none; z-index: 1;
+    transform: translateX(-200%);
   }
-  @keyframes beamSweep { 0%{left:-60%} 100%{left:110%} }
+  @keyframes beamSweep { 0%{transform:translateX(-200%)} 100%{transform:translateX(300%)} }
 
   /* CLASSIFIED/VERIFIED ribbon */
   .vra-ribbon {
@@ -635,11 +643,12 @@
   }
   .vra-ribbon::before {
     content: '';
-    position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(90deg,transparent,rgba(247,201,72,.15),transparent);
     animation: ribbonSheen 2.5s ease-in-out infinite 1s;
+    transform: translateX(-200%);
   }
-  @keyframes ribbonSheen { to { left: 200%; } }
+  @keyframes ribbonSheen { 0%{transform:translateX(-200%)} 100%{transform:translateX(400%)} }
   .vra-ribbon-dot {
     width: 6px; height: 6px; border-radius: 50%;
     background: var(--accent3); animation: pulse 1.4s ease infinite;
@@ -777,11 +786,12 @@
   }
   .vra-card-bar::after {
     content: '';
-    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 60%; height: 100%;
     background: rgba(255,255,255,0.5);
     animation: barSheen 3s ease-in-out infinite;
+    transform: translateX(-200%);
   }
-  @keyframes barSheen { to { left: 200%; } }
+  @keyframes barSheen { 0%{transform:translateX(-200%)} 100%{transform:translateX(400%)} }
 
   /* Corner bracket decorations */
   .vra-card-corner {
@@ -867,11 +877,12 @@
   }
   .vra-btn-view::after {
     content: '';
-    position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
-    transition: left .5s;
+    transition: transform .5s;
+    transform: translateX(-100%);
   }
-  .vra-btn-view:hover::after { left: 100%; }
+  .vra-btn-view:hover::after { transform: translateX(100%); }
   .vra-btn-view:hover { transform: translateY(-2px); box-shadow: 0 0 36px rgba(0,212,255,.5); }
 
   .vra-btn-dl {
@@ -909,8 +920,8 @@
   .doc-badge.blue  { background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.25); color: var(--accent); }
   .doc-badge.gold  { background: rgba(247,201,72,.08); border: 1px solid rgba(247,201,72,.25); color: var(--accent3); }
   .btn-view { display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: #050a12; font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; padding: 14px 28px; border-radius: 4px; text-decoration: none; letter-spacing: 1.2px; text-transform: uppercase; transition: all .3s; box-shadow: 0 0 24px rgba(0,212,255,.25); position: relative; overflow: hidden; }
-  .btn-view::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent); transition:left .5s; }
-  .btn-view:hover::after { left:100%; }
+  .btn-view::after { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent); transition:transform .5s; transform:translateX(-100%); }
+  .btn-view:hover::after { transform:translateX(100%); }
   .btn-view:hover { box-shadow: 0 0 40px rgba(0,212,255,.45); transform: translateY(-2px); }
   .btn-dl { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: var(--text); font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; padding: 14px 28px; border-radius: 4px; text-decoration: none; letter-spacing: 1.2px; text-transform: uppercase; border: 1px solid var(--border); transition: all .3s; }
   .btn-dl:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(0,255,157,.05); }
@@ -1141,10 +1152,11 @@
   }
   .stats-strip::after {
     content: '';
-    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 60%; height: 100%;
     background: linear-gradient(90deg, transparent, rgba(0,212,255,0.05), transparent);
     animation: beamSweep 6s ease-in-out infinite 1s;
     pointer-events: none;
+    transform: translateX(-200%);
   }
 
   /* ── stat-item hover neon underline ── */
@@ -1198,10 +1210,11 @@
   footer { position: relative; overflow: hidden; }
   footer::before {
     content: '';
-    position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 50%; height: 100%;
     background: linear-gradient(90deg, transparent, rgba(0,212,255,0.04), transparent);
     animation: beamSweep 8s ease-in-out infinite 2s;
     pointer-events: none;
+    transform: translateX(-200%);
   }
 
   /* ── About section avatar orbital ring ── */
@@ -2014,6 +2027,19 @@
   <div class="f-copy">Made in Mumbai, India 🇮🇳</div>
 </footer>
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── DISABLE PINCH ZOOM ──
+document.addEventListener('gesturestart', function(e){ e.preventDefault(); }, { passive: false });
+document.addEventListener('gesturechange', function(e){ e.preventDefault(); }, { passive: false });
+document.addEventListener('gestureend', function(e){ e.preventDefault(); }, { passive: false });
+(function(){
+  var lastTouchEnd = 0;
+  document.addEventListener('touchend', function(e){
+    var now = Date.now();
+    if (now - lastTouchEnd <= 300) { e.preventDefault(); }
+    lastTouchEnd = now;
+  }, { passive: false });
+})();
+
 // ── HAMBURGER MENU ──
 (function(){
   var ham = document.getElementById('ham');
